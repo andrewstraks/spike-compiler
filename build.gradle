@@ -1,4 +1,4 @@
-group 'spike-scripts'
+group 'spike-compiler'
 version ''
 
 apply plugin: 'groovy'
