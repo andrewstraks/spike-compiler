@@ -1,0 +1,17 @@
+'import $dicts as app.service.Dict';
+'import $menu as app.component.Menu';
+
+<div>
+    <h1> [[$local.pageTitle]] </h1>
+
+    [[ $menu.getCategories($local.pageTitle) ]]
+
+    # $.each($local.users, function(user, i) {
+
+        <p>Id: [[user.id]]; Name: [[user.name]]</p>
+
+        [[ $local.pageTitle ]]  [[ $local.pageName ]]  [[ $local.author ]]
+
+    #});
+
+</div>

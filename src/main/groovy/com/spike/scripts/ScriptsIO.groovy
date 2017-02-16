@@ -1,10 +1,10 @@
-package com.spike.compiler
+package com.spike.scripts
 
 
 /**
  * Created by Dawid on 2017-01-29.
  */
-class TemplateIO {
+class ScriptsIO {
 
     def getFile(srcPath) {
         return new File(srcPath).getText("UTF-8");

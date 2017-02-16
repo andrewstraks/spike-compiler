@@ -1,11 +1,12 @@
-package com.spike.compiler
+package com.spike.scripts
 
+import com.spike.Executor
 import org.apache.commons.lang.StringUtils
 
 /**
  * Created by Dawid on 2017-01-29.
  */
-class TemplateCompiler {
+class ScriptsCompiler {
 
     def compileGStrings(String body){
 
