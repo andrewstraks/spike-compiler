@@ -77,6 +77,8 @@ class ScriptsCompiler {
                 'app.enumerator.add',
                 'app.lister.register',
                 'app.lister.add',
+                'app.partial.register',
+                'app.partial.add',
         ]
 
         def isModule = { bodyFragment ->
