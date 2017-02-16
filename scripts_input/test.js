@@ -63,10 +63,45 @@ app.component.register("Menu", {
 
 });
 SPIKE_IMPORT_END
+
+'import $super as app.component.PostList';
+'import $postService as app.service.Post';
+app.abstract.register("TestAbstract", {
+
+    createRecentPostsList: function () {
+
+        $postService.getRecentPosts()
+            .then(function (posts) {
+                $super.createPostsList(posts, 5);
+            })
+            .catch(function (error) {
+            });
+
+    },
+
+    createAllPostsList: function (arg1, arg2) {
+
+        $postService.getPosts()
+            .then(function (posts) {
+                $super.createPostsList(posts, 20);
+            })
+            .catch(function (error) {
+            });
+
+    },
+
+
+});
+
+SPIKE_IMPORT_END
 'import $postService as app.service.Post';
 'import $postsList as app.component.PostList';
 
 app.component.register("PostsList", {
+
+    inherits: [
+        app.abstract.TestAbstract
+    ],
 
     init: function (data) {
 
@@ -75,28 +110,6 @@ app.component.register("PostsList", {
         } else {
             $this.createAllPostsList();
         }
-
-    },
-
-    createRecentPostsList: function () {
-
-        $postService.getRecentPosts()
-            .then(function (posts) {
-                $postsList.createPostsList(posts, 5);
-            })
-            .catch(function (error) {
-            });
-
-    },
-
-    createAllPostsList: function () {
-
-        $postService.getPosts()
-            .then(function (posts) {
-                $postsList.createPostsList(posts, 20);
-            })
-            .catch(function (error) {
-            });
 
     },
 

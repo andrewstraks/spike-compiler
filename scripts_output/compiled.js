@@ -58,18 +58,9 @@ app.component.register("Menu", {
 
 });
 /**SPIKE_IMPORT_END**/
-/** 'import $postService as app.service.Post'; **/
-/** 'import $postsList as app.component.PostList'; **/app.component.register("PostsList", {
 
-    init: function (data) {
-
-        if (data.recentPosts) {
-            app.component.PostsList.createRecentPostsList();
-        } else {
-            app.component.PostsList.createAllPostsList();
-        }
-
-    },
+/** 'import $super as app.component.PostList'; **/
+/** 'import $postService as app.service.Post'; **/app.abstract.register("TestAbstract", {
 
     createRecentPostsList: function () {
 
@@ -82,7 +73,7 @@ app.component.register("Menu", {
 
     },
 
-    createAllPostsList: function () {
+    createAllPostsList: function (arg1, arg2) {
 
         app.service.Post.getPosts()
             .then(function (posts) {
@@ -90,6 +81,25 @@ app.component.register("Menu", {
             })
             .catch(function (error) {
             });
+
+    },
+
+
+});/**SPIKE_IMPORT_END**/
+/** 'import $postService as app.service.Post'; **/
+/** 'import $postsList as app.component.PostList'; **/app.component.register("PostsList", {
+
+    inherits: [
+        app.abstract.TestAbstract
+    ],
+
+    init: function (data) {
+
+        if (data.recentPosts) {
+            app.component.PostsList.createRecentPostsList();
+        } else {
+            app.component.PostsList.createAllPostsList();
+        }
 
     },
 

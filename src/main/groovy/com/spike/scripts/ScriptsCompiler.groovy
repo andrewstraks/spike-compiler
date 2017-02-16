@@ -79,6 +79,8 @@ class ScriptsCompiler {
                 'app.lister.add',
                 'app.partial.register',
                 'app.partial.add',
+                'app.abstract.register',
+                'app.abstract.add',
         ]
 
         def isModule = { bodyFragment ->
@@ -185,7 +187,18 @@ class ScriptsCompiler {
                 Executor.debug 'TO COMPILE +++++++ with imports: '+currentImports
                 Executor.debug toCompile
 
-                currentImports['$this'] = getThis(toCompile)
+                def _this = getThis(toCompile)
+
+                def selfThis = false
+                if(_this.contains('app.abstract')){
+
+                    selfThis = true
+                   // currentImports['$super'] = '___super'
+
+                }else{
+                    currentImports['$this'] = getThis(toCompile)
+                }
+
 
                 def compiled = toCompile
 
@@ -194,8 +207,16 @@ class ScriptsCompiler {
                     compiled = compiled.replace(dependencyName, dependencyFullPacakge)
                 }
 
+                if(selfThis){
+
+                    def replacement = '\n var ___super = this;'
+                        //TODO implement $super word
+
+                }
+
                 Executor.debug 'COMPILED +++++++ with imports: '+currentImports
                 Executor.debug compiled
+
 
                 output = output.replace(toCompile, compiled.trim())
 
