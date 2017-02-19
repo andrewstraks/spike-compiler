@@ -29,6 +29,15 @@ class Executor {
 
         def type = args[0]
 
+        if(type == 'test-templates'){
+            type = 'templates'
+            args = [null, 'templates_input/', 'templates_output/templates.js']
+        }else if(type =='test-scripts'){
+            type = 'imports-gstrings'
+            args = [null, 'scripts_input/test.js', 'scripts_output/compiled.js']
+        }
+
+
         if (type == 'imports-gstrings') {
 
             def fileBody = scriptsIO.getFile(args[1]);

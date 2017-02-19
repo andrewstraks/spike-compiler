@@ -59,14 +59,14 @@ app.component.register("Menu", {
 });
 /**SPIKE_IMPORT_END**/
 
-/** 'import $super as app.component.PostList'; **/
 /** 'import $postService as app.service.Post'; **/app.abstract.register("TestAbstract", {
 
     createRecentPostsList: function () {
+ var ___super = this; 
 
         app.service.Post.getRecentPosts()
             .then(function (posts) {
-                app.component.PostList.createPostsList(posts, 5);
+                ___super.createPostsList(posts, 5);
             })
             .catch(function (error) {
             });
@@ -74,15 +74,27 @@ app.component.register("Menu", {
     },
 
     createAllPostsList: function (arg1, arg2) {
+ var ___super = this; 
 
         app.service.Post.getPosts()
             .then(function (posts) {
-                app.component.PostList.createPostsList(posts, 20);
+                ___super.createPostsList(posts, 20);
             })
             .catch(function (error) {
             });
 
+        return {
+
+            name: 'Peter',
+
+            getName: function(){
+ var ___super = this; 
+                app.log('name');
+            }
+
+        }
     },
+
 
 
 });/**SPIKE_IMPORT_END**/

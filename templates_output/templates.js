@@ -8,12 +8,13 @@
 ;      if($local.person && $local.person.hidden == false) { 
 ; html += '' 
 ; html += '        <p onclick="$local.click('+"'"+$local.person.id+"'"+')">Name: '+$local.person.name+'</p>' 
-; html += '        <p>Surname: '+$local.person.surname+'</p>' 
+; html += '        <p spike-translation="m_tranlsation_1">Surname: '+$local.person.surname+'</p>' 
 ; html += '' 
 ;         if(app.service.Cookies.hasCookie('SESSION')) { 
 ; html += '        <p>Warning</p>' 
 ;          } 
 ; html += '' 
+; html += '        <div spike-translation="m_tranlsation_2">m_tranlsation_2</div>' 
 ; html += '        '+ app.partial.include(app.partial.Menu, $local.person) +'' 
 ; html += '' 
 ;      } 
@@ -29,7 +30,7 @@
  "        <div class=\"modal-content\">" + 
  "            <div class=\"modal-header\">" + 
  "                <button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>" + 
- "                <h4 class=\"modal-title\">Modal Header</h4>" + 
+ "                <h4 class=\"modal-title\" spike-translation=\"m_tranlsation_title\">m_tranlsation_title</h4>" + 
  "            </div>" + 
  "            <div class=\"modal-body\">" + 
  "                <p>Some text in the modal.</p>" + 
@@ -56,6 +57,9 @@
 ; html += '        '+ $local.pageTitle +'  '+ $local.pageName +'  '+ $local.author +'' 
 ; html += '' 
 ;     }); 
+; html += '' 
+; html += '    <h2 spike-translation="m_tranlsation_5"' 
+; html += '    data-id="2">m_tranlsation_5</h2>' 
 ; html += '' 
 ; html += '</div>' 
 ; return html 

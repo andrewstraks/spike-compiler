@@ -74,7 +74,70 @@ class TemplatesCompiler {
 
         }
 
+        output = replaceSpikeTranslations(output)
+
         return output
+
+    }
+
+    def replaceSpikeTranslations(String template){
+
+
+        def translationWord = "spike-translation";
+        def translationIndexes = [] as Set;
+
+        int index = template.indexOf(translationWord);
+        while (index >= 0) {
+
+            if(index > 0){
+                translationIndexes << index;
+            }
+
+            index = template.indexOf(translationWord, index + translationWord.length());
+
+            if(index > 0){
+                translationWord << index;
+            }
+
+        }
+
+        translationIndexes.each { def tindex ->
+
+            def fragment = template.substring(tindex, template.length())
+            fragment = fragment.substring(0, fragment.indexOf('<')+1)
+
+            println fragment
+
+            def between = fragment.substring(fragment.indexOf('>'), fragment.indexOf('<')+1);
+
+            if(between.replace('<', '').replace('>','').trim().length() == 0){
+
+                def translation = fragment.substring(fragment.indexOf('spike-translation='), fragment.length())
+                translation = translation.substring(0, translation.lastIndexOf('"')+1)
+                translation = translation.replace('spike-translation=', '')
+
+                if(translation.startsWith('\\')){
+                    translation = translation.substring(2, translation.length())
+                    translation = translation.substring(0, translation.indexOf('\\"'))+translation.substring(translation.indexOf('\\"')+2, translation.length())
+                }else {
+                    translation = translation.substring(1, translation.length())
+                    translation = translation.substring(0, translation.indexOf('"'))+translation.substring(translation.indexOf('"')+1, translation.length())
+                }
+
+                if(translation.contains("'") || translation.contains(";")){
+                    translation = translation.substring(0, translation.indexOf("'"))
+                }
+
+               def fragmentToReplace = fragment.replace(between, '>' + translation + '<');
+
+                template = template.replace(fragment, fragmentToReplace)
+
+            }
+
+
+        }
+
+        return template
 
     }
 

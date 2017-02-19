@@ -193,7 +193,7 @@ class ScriptsCompiler {
                 if(_this.contains('app.abstract')){
 
                     selfThis = true
-                   // currentImports['$super'] = '___super'
+                    currentImports['$super'] = '___super'
 
                 }else{
                     currentImports['$this'] = getThis(toCompile)
@@ -209,8 +209,7 @@ class ScriptsCompiler {
 
                 if(selfThis){
 
-                    def replacement = '\n var ___super = this;'
-                        //TODO implement $super word
+                    compiled = compileSuper(compiled)
 
                 }
 
@@ -237,6 +236,49 @@ class ScriptsCompiler {
 
 
         return output
+
+    }
+
+    def compileSuper(compiled){
+
+        def replacement = '\n var ___super = this;'
+
+        def functionWords = [": function", ":function"];
+        def functionIndexes = [] as Set;
+
+        functionWords.each { functionWord ->
+
+            int functionIndex = compiled.indexOf(functionWord);
+            while (functionIndex >= 0) {
+
+
+                if(functionIndex > 0){
+                    functionIndexes << functionIndex;
+                }
+
+                functionIndex = compiled.indexOf(functionWord, functionIndex + functionWord.length());
+
+                if(functionIndex > 0){
+                    functionIndexes << functionIndex;
+                }
+
+
+            }
+
+        }
+
+        functionIndexes.each { index ->
+
+            def fragment = compiled.substring(index, compiled.length())
+            fragment = fragment.substring(fragment.indexOf('{')+1, fragment.length())
+
+            compiled = compiled.replace(fragment, replacement+ ' '+fragment)
+
+        }
+
+        return compiled;
+
+
 
     }
 

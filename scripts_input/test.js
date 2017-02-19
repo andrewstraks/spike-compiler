@@ -64,7 +64,6 @@ app.component.register("Menu", {
 });
 SPIKE_IMPORT_END
 
-'import $super as app.component.PostList';
 'import $postService as app.service.Post';
 app.abstract.register("TestAbstract", {
 
@@ -88,7 +87,17 @@ app.abstract.register("TestAbstract", {
             .catch(function (error) {
             });
 
+        return {
+
+            name: 'Peter',
+
+            getName: function(){
+                app.log('name');
+            }
+
+        }
     },
+
 
 
 });
