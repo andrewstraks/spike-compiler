@@ -106,8 +106,6 @@ class TemplatesCompiler {
             def fragment = template.substring(tindex, template.length())
             fragment = fragment.substring(0, fragment.indexOf('<')+1)
 
-            println fragment
-
             def between = fragment.substring(fragment.indexOf('>'), fragment.indexOf('<')+1);
 
             if(between.replace('<', '').replace('>','').trim().length() == 0){
