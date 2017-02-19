@@ -8,7 +8,7 @@ import org.apache.commons.lang.StringUtils
  */
 class ScriptsCompiler {
 
-    def compileGStrings(String body){
+    def compileGStrings(String body) {
 
         def bracketsSingle = "\${";
         def bracketsDouble = "\${{";
@@ -23,12 +23,12 @@ class ScriptsCompiler {
 
         doubleBracketsIndexes.each { bracketIndex ->
 
-            def bracketString = body.substring(bracketIndex-1, body.length())
-            bracketString = bracketString.substring(0, bracketString.indexOf('}')+2)
+            def bracketString = body.substring(bracketIndex - 1, body.length())
+            bracketString = bracketString.substring(0, bracketString.indexOf('}') + 2)
 
             Executor.debug bracketString
 
-            body = body.replace(bracketString, "'+"+bracketString.replace('\${{','').replace('}}','')+"+'")
+            body = body.replace(bracketString, "'+" + bracketString.replace('\${{', '').replace('}}', '') + "+'")
 
         }
 
@@ -41,14 +41,13 @@ class ScriptsCompiler {
         singleBracketsIndexes.each { bracketIndex ->
 
             def bracketString = body.substring(bracketIndex, body.length())
-            bracketString = bracketString.substring(0, bracketString.indexOf('}')+1)
+            bracketString = bracketString.substring(0, bracketString.indexOf('}') + 1)
 
             Executor.debug bracketString
 
-            body = body.replace(bracketString, '"+'+bracketString.replace('\${','').replace('}','')+'+"')
+            body = body.replace(bracketString, '"+' + bracketString.replace('\${', '').replace('}', '') + '+"')
 
         }
-
 
 //
 //        var gstring = 'Person name: ${person.name}';
@@ -85,9 +84,9 @@ class ScriptsCompiler {
 
         def isModule = { bodyFragment ->
 
-            for(String module : modules){
+            for (String module : modules) {
 
-                if(StringUtils.countMatches(bodyFragment, module) != 0){
+                if (StringUtils.countMatches(bodyFragment, module) != 0) {
                     return true;
                 }
 
@@ -115,11 +114,11 @@ class ScriptsCompiler {
 
             def toGet = ''
             def index = toCompile.indexOf(moduleName)
-            if(index > -1){
+            if (index > -1) {
                 toGet = toCompile.substring(index, toCompile.indexOf('{'))
-                toGet = toGet.replace(moduleName,'').replace('"','').replace("'","").replace(",","").replace("(","").trim();
+                toGet = toGet.replace(moduleName, '').replace('"', '').replace("'", "").replace(",", "").replace("(", "").trim();
 
-                return moduleName.replace('register','').replace('add','')+toGet
+                return moduleName.replace('register', '').replace('add', '') + toGet
             }
 
             return null
@@ -128,9 +127,9 @@ class ScriptsCompiler {
 
         def getThis = { toCompile ->
 
-            for(String moduleName : modules){
+            for (String moduleName : modules) {
                 def x = getForModule(moduleName, toCompile)
-                if(x != null){
+                if (x != null) {
                     return x;
                 }
             }
@@ -148,13 +147,13 @@ class ScriptsCompiler {
         while (index >= 0) {
 
 
-            if(index > 0){
+            if (index > 0) {
                 importIndexes << index;
             }
 
             index = body.indexOf(importWord, index + importWord.length());
 
-            if(index > 0){
+            if (index > 0) {
                 importIndexes << index;
             }
 
@@ -173,29 +172,29 @@ class ScriptsCompiler {
 
             def importSubstr = afterImportSubstr.substring(0, afterImportSubstr.indexOf("';") + 1)
 
-            def outputreplaceimport = afterImportSubstr.substring(0, afterImportSubstr.indexOf("';")+2)
+            def outputreplaceimport = afterImportSubstr.substring(0, afterImportSubstr.indexOf("';") + 2)
             allImportsToReplace << outputreplaceimport;
 
             importSubstr = importSubstr.replace("'import ", "").replace(" as ", ",").replace("'", "");
             currentImports[importSubstr.split(',')[0].trim()] = importSubstr.split(',')[1].trim();
 
-            if(StringUtils.countMatches(afterImportSubstr, "'import") == 1 && isModule(afterImportSubstr)){
+            if (StringUtils.countMatches(afterImportSubstr, "'import") == 1 && isModule(afterImportSubstr)) {
 
-                def toCompile = afterImportSubstr.substring(afterImportSubstr.indexOf("';")+2, afterImportSubstr.length());
+                def toCompile = afterImportSubstr.substring(afterImportSubstr.indexOf("';") + 2, afterImportSubstr.length());
                 toCompile = toCompile.substring(0, toCompile.indexOf('SPIKE_IMPORT_END'))
 
-                Executor.debug 'TO COMPILE +++++++ with imports: '+currentImports
+                Executor.debug 'TO COMPILE +++++++ with imports: ' + currentImports
                 Executor.debug toCompile
 
                 def _this = getThis(toCompile)
 
                 def selfThis = false
-                if(_this.contains('app.abstract')){
+                if (_this.contains('app.abstract')) {
 
                     selfThis = true
                     currentImports['$super'] = '___super'
 
-                }else{
+                } else {
                     currentImports['$this'] = getThis(toCompile)
                 }
 
@@ -203,17 +202,17 @@ class ScriptsCompiler {
                 def compiled = toCompile
 
                 currentImports.each { dependencyName, dependencyFullPacakge ->
-                    Executor.debug 'dependencyName: '+dependencyName
+                    Executor.debug 'dependencyName: ' + dependencyName
                     compiled = compiled.replace(dependencyName, dependencyFullPacakge)
                 }
 
-                if(selfThis){
+                if (selfThis) {
 
                     compiled = compileSuper(compiled)
 
                 }
 
-                Executor.debug 'COMPILED +++++++ with imports: '+currentImports
+                Executor.debug 'COMPILED +++++++ with imports: ' + currentImports
                 Executor.debug compiled
 
 
@@ -229,7 +228,7 @@ class ScriptsCompiler {
 
 
         allImportsToReplace.each {
-            output = output.replace(it, '/** '+it+' **/');
+            output = output.replace(it, '/** ' + it + ' **/');
         }
 
         output = output.replace('SPIKE_IMPORT_END', '/**SPIKE_IMPORT_END**/')
@@ -239,45 +238,52 @@ class ScriptsCompiler {
 
     }
 
-    def compileSuper(compiled){
+    def compileSuper(compiled) {
 
-        def replacement = '\n var ___super = this;'
+        try {
 
-        def functionWords = [": function", ":function"];
-        def functionIndexes = [] as Set;
+            def replacement = '\n var ___super = this;'
 
-        functionWords.each { functionWord ->
+            def functionWords = [": function", ":function"];
+            def functionIndexes = [] as Set;
 
-            int functionIndex = compiled.indexOf(functionWord);
-            while (functionIndex >= 0) {
+            functionWords.each { functionWord ->
+
+                int functionIndex = compiled.indexOf(functionWord);
+                while (functionIndex >= 0) {
 
 
-                if(functionIndex > 0){
-                    functionIndexes << functionIndex;
+                    if (functionIndex > 0) {
+                        functionIndexes << functionIndex;
+                    }
+
+                    functionIndex = compiled.indexOf(functionWord, functionIndex + functionWord.length());
+
+                    if (functionIndex > 0) {
+                        functionIndexes << functionIndex;
+                    }
+
+
                 }
-
-                functionIndex = compiled.indexOf(functionWord, functionIndex + functionWord.length());
-
-                if(functionIndex > 0){
-                    functionIndexes << functionIndex;
-                }
-
 
             }
 
+            functionIndexes.each { index ->
+
+                def fragment = compiled.substring(index, compiled.length())
+                fragment = fragment.substring(fragment.indexOf('{') + 1, fragment.length())
+
+                compiled = compiled.replace(fragment, replacement + ' ' + fragment)
+
+            }
+
+        } catch (Exception e) {
+            println 'Error occurred during compiling $super word'
+            e.printStackTrace()
         }
 
-        functionIndexes.each { index ->
-
-            def fragment = compiled.substring(index, compiled.length())
-            fragment = fragment.substring(fragment.indexOf('{')+1, fragment.length())
-
-            compiled = compiled.replace(fragment, replacement+ ' '+fragment)
-
-        }
 
         return compiled;
-
 
 
     }
