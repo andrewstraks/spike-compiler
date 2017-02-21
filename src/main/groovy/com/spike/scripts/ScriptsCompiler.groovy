@@ -21,14 +21,24 @@ class ScriptsCompiler {
             index = body.indexOf(bracketsDouble, index + bracketsDouble.length());
         }
 
+        def bracketString = null
         doubleBracketsIndexes.each { bracketIndex ->
 
-            def bracketString = body.substring(bracketIndex - 1, body.length())
-            bracketString = bracketString.substring(0, bracketString.indexOf('}') + 2)
+            try {
 
-            Executor.debug bracketString
+                bracketString = body.substring(bracketIndex - 1, body.length())
+                bracketString = bracketString.substring(0, bracketString.indexOf('}') + 2)
 
-            body = body.replace(bracketString, "'+" + bracketString.replace('\${{', '').replace('}}', '') + "+'")
+                Executor.debug bracketString
+
+                body = body.replace(bracketString, "'+" + bracketString.replace('\${{', '').replace('}}', '') + "+'")
+
+            } catch (Exception e) {
+                println 'Error occurred during GStrings compiling. Probably incorrect usage of ${{ }} or around.'
+                println 'Suggested fragment of code: ' + bracketString
+            }
+
+            bracketString = null
 
         }
 
@@ -40,19 +50,24 @@ class ScriptsCompiler {
 
         singleBracketsIndexes.each { bracketIndex ->
 
-            def bracketString = body.substring(bracketIndex, body.length())
-            bracketString = bracketString.substring(0, bracketString.indexOf('}') + 1)
+            try {
 
-            Executor.debug bracketString
+                bracketString = body.substring(bracketIndex, body.length())
+                bracketString = bracketString.substring(0, bracketString.indexOf('}') + 1)
 
-            body = body.replace(bracketString, '"+' + bracketString.replace('\${', '').replace('}', '') + '+"')
+                Executor.debug bracketString
+
+                body = body.replace(bracketString, '"+' + bracketString.replace('\${', '').replace('}', '') + '+"')
+
+            } catch (Exception e) {
+                println 'Error occurred during GStrings compiling. Probably incorrect usage of ${ } or around.'
+                println 'Suggested fragment of code: ' + bracketString
+            }
+
+
+            bracketString = null
 
         }
-
-//
-//        var gstring = 'Person name: ${person.name}';
-//        gstring += ", surname: ${person.surname}}";
-//        gstring = ', nick: "{{person.nick}}" ';
 
         return body
 
@@ -95,20 +110,6 @@ class ScriptsCompiler {
             return false
 
         }
-
-//        def getIndexOfNewModuleRegisterOrAdd = { def bodyFragment ->
-//
-//            def concatSign = "SPIKE_IMPORT_END";
-//
-//            def index1 = bodyFragment.indexOf(concatSign)
-//
-//            if(index1 > -1){
-//                return index1
-//            }
-//
-//            return bodyFragment.length()
-//
-//        }
 
         def getForModule = { moduleName, toCompile ->
 
@@ -170,58 +171,65 @@ class ScriptsCompiler {
             def maxLeng = importIndexes[i + 1] ? importIndexes[i + 1] : body.length()
             afterImportSubstr = body.substring(importIndexes[i], maxLeng);
 
-            def importSubstr = afterImportSubstr.substring(0, afterImportSubstr.indexOf("';") + 1)
+            def importSubstr = null
 
-            def outputreplaceimport = afterImportSubstr.substring(0, afterImportSubstr.indexOf("';") + 2)
-            allImportsToReplace << outputreplaceimport;
+            try {
+                importSubstr = afterImportSubstr.substring(0, afterImportSubstr.indexOf("';") + 1)
 
-            importSubstr = importSubstr.replace("'import ", "").replace(" as ", ",").replace("'", "");
-            currentImports[importSubstr.split(',')[0].trim()] = importSubstr.split(',')[1].trim();
+                def outputreplaceimport = afterImportSubstr.substring(0, afterImportSubstr.indexOf("';") + 2)
+                allImportsToReplace << outputreplaceimport;
 
-            if (StringUtils.countMatches(afterImportSubstr, "'import") == 1 && isModule(afterImportSubstr)) {
+                importSubstr = importSubstr.replace("'import ", "").replace(" as ", ",").replace("'", "");
+                currentImports[importSubstr.split(',')[0].trim()] = importSubstr.split(',')[1].trim();
 
-                def toCompile = afterImportSubstr.substring(afterImportSubstr.indexOf("';") + 2, afterImportSubstr.length());
-                toCompile = toCompile.substring(0, toCompile.indexOf('SPIKE_IMPORT_END'))
+                if (StringUtils.countMatches(afterImportSubstr, "'import") == 1 && isModule(afterImportSubstr)) {
 
-                Executor.debug 'TO COMPILE +++++++ with imports: ' + currentImports
-                Executor.debug toCompile
+                    def toCompile = afterImportSubstr.substring(afterImportSubstr.indexOf("';") + 2, afterImportSubstr.length());
+                    toCompile = toCompile.substring(0, toCompile.indexOf('SPIKE_IMPORT_END'))
 
-                def _this = getThis(toCompile)
+                    Executor.debug 'TO COMPILE +++++++ with imports: ' + currentImports
+                    Executor.debug toCompile
 
-                def selfThis = false
-                if (_this.contains('app.abstract')) {
+                    def _this = getThis(toCompile)
 
-                    selfThis = true
-                    currentImports['$super'] = '___super'
+                    def selfThis = false
+                    if (_this.contains('app.abstract')) {
 
-                } else {
-                    currentImports['$this'] = getThis(toCompile)
+                        selfThis = true
+                        currentImports['$super'] = '___super'
+
+                    } else {
+                        currentImports['$this'] = getThis(toCompile)
+                    }
+
+
+                    def compiled = toCompile
+
+                    currentImports.each { dependencyName, dependencyFullPacakge ->
+                        Executor.debug 'dependencyName: ' + dependencyName
+                        compiled = compiled.replace(dependencyName, dependencyFullPacakge)
+                    }
+
+                    if (selfThis) {
+
+                        compiled = compileSuper(compiled)
+
+                    }
+
+                    Executor.debug 'COMPILED +++++++ with imports: ' + currentImports
+                    Executor.debug compiled
+
+
+                    output = output.replace(toCompile, compiled.trim())
+
+                    currentImports = [:]
+
                 }
 
-
-                def compiled = toCompile
-
-                currentImports.each { dependencyName, dependencyFullPacakge ->
-                    Executor.debug 'dependencyName: ' + dependencyName
-                    compiled = compiled.replace(dependencyName, dependencyFullPacakge)
-                }
-
-                if (selfThis) {
-
-                    compiled = compileSuper(compiled)
-
-                }
-
-                Executor.debug 'COMPILED +++++++ with imports: ' + currentImports
-                Executor.debug compiled
-
-
-                output = output.replace(toCompile, compiled.trim())
-
-                currentImports = [:]
-
+            } catch (Exception e) {
+                println 'Error occurred during imports compiling. Probably incorrect declaration of import or around.'
+                println 'Suggested fragment of code: ' + importSubstr ? importSubstr : afterImportSubstr
             }
-
 
         }
 
@@ -247,39 +255,55 @@ class ScriptsCompiler {
             def functionWords = [": function", ":function"];
             def functionIndexes = [] as Set;
 
-            functionWords.each { functionWord ->
+            try {
 
-                int functionIndex = compiled.indexOf(functionWord);
-                while (functionIndex >= 0) {
+                functionWords.each { functionWord ->
+
+                    int functionIndex = compiled.indexOf(functionWord);
+                    while (functionIndex >= 0) {
 
 
-                    if (functionIndex > 0) {
-                        functionIndexes << functionIndex;
+                        if (functionIndex > 0) {
+                            functionIndexes << functionIndex;
+                        }
+
+                        functionIndex = compiled.indexOf(functionWord, functionIndex + functionWord.length());
+
+                        if (functionIndex > 0) {
+                            functionIndexes << functionIndex;
+                        }
+
+
                     }
-
-                    functionIndex = compiled.indexOf(functionWord, functionIndex + functionWord.length());
-
-                    if (functionIndex > 0) {
-                        functionIndexes << functionIndex;
-                    }
-
 
                 }
 
+            } catch (Exception e) {
+                println 'Error occurred during $super word compiling. Probably incorrect usage of $super or around.'
+                println 'No suggested fragment of code, fail on preparation'
             }
 
+            def fragment = null
             functionIndexes.each { index ->
 
-                def fragment = compiled.substring(index, compiled.length())
-                fragment = fragment.substring(fragment.indexOf('{') + 1, fragment.length())
+                try {
 
-                compiled = compiled.replace(fragment, replacement + ' ' + fragment)
+                    fragment = compiled.substring(index, compiled.length())
+                    fragment = fragment.substring(fragment.indexOf('{') + 1, fragment.length())
+
+                    compiled = compiled.replace(fragment, replacement + ' ' + fragment)
+
+                } catch (Exception e) {
+                    println 'Error occurred during $super word compiling. Probably incorrect usage of $super or around.'
+                    println 'Suggested fragment of code: ' + fragment.replace(';', '').replace('html', '').replace('+=', '').replace("'", '').replace('\n', ' ')
+                }
+
+                fragment = null
 
             }
 
         } catch (Exception e) {
-            println 'Error occurred during compiling $super word'
-            e.printStackTrace()
+            println 'Error occurred during compiling $super word. Analyse your $super usages.'
         }
 
 

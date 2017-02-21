@@ -1,5 +1,7 @@
 package com.spike.templates
 
+import java.util.concurrent.ThreadLocalRandom
+
 /**
  * Created by Dawid on 2017-01-29.
  */
@@ -51,6 +53,8 @@ class TemplatesCompiler {
                 output = output.replace(key.trim(), val.trim())
             }
 
+            output = createPartialEvents(output)
+
         } else {
 
             output = '; window["' + templatesGlobalDeclaration + '"]["' + this.getFileName(templateFile) + '"] = '
@@ -79,31 +83,101 @@ class TemplatesCompiler {
 
     }
 
-    def replaceSpikeTranslations(String template) {
 
-        try {
+    def createUniqueHash(){
 
-            def translationWord = "spike-translation";
-            def translationIndexes = [] as Set;
+        def d = 'ABCDEFGHIJKLMNOPRSTUWYZ1234567890abcdefghijklmnoprstuwxyz'
+        def hash = ''
 
-            int index = template.indexOf(translationWord);
-            while (index >= 0) {
+        for(def i = 0; i < 6; i++){
+            int randIndex = ThreadLocalRandom.current().nextInt(0, d.length() -1);
+            hash += d.split("")[randIndex]
+        }
 
-                if (index > 0) {
-                    translationIndexes << index;
-                }
+        return hash
 
-                index = template.indexOf(translationWord, index + translationWord.length());
+    }
 
-                if (index > 0) {
-                    translationWord << index;
-                }
+    def createPartialEvents(String template){
+
+        def eventWord = "[";
+        def eventsIndexes = [] as Set;
+
+        int index = template.indexOf(eventWord);
+        while (index >= 0) {
+
+            if (index > 0) {
+                eventsIndexes << index;
+            }
+
+            index = template.indexOf(eventWord, index + eventWord.length());
+
+            if (index > 0) {
+                eventsIndexes << index;
+            }
+
+        }
+
+
+        def eventsList = []
+        def fragment = null
+        eventsIndexes.each { def eindex ->
+
+            fragment = template.substring(eindex, template.length())
+
+            def eventName = fragment.substring(0, fragment.indexOf(']') + 1)
+            eventName = eventName.substring(eventName.indexOf('['), eventName.indexOf(']') + 1);
+
+            if(!eventName.startsWith('["')){
+
+                eventsList << eventName.trim()
 
             }
 
-            translationIndexes.each { def tindex ->
+            fragment = null
 
-                def fragment = template.substring(tindex, template.length())
+        }
+
+        eventsList.each { event ->
+
+            template = template.replace(event, event.replace('[','spike-event="'+event.replace('[','').replace(']','')+'" spike-event-').replace(']',''))
+
+        }
+
+        return template
+
+    }
+
+
+    def replaceSpikeTranslations(String template) {
+
+
+        def translationWord = "spike-translation";
+        def translationIndexes = [] as Set;
+
+        int index = template.indexOf(translationWord);
+        while (index >= 0) {
+
+            if (index > 0) {
+                translationIndexes << index;
+            }
+
+            index = template.indexOf(translationWord, index + translationWord.length());
+
+            if (index > 0) {
+                translationIndexes << index;
+            }
+
+        }
+
+        def fragment = null
+
+        translationIndexes.each { def tindex ->
+
+            fragment = template.substring(tindex, template.length())
+
+            try {
+
                 fragment = fragment.substring(0, fragment.indexOf('<') + 1)
 
                 def between = fragment.substring(fragment.indexOf('>'), fragment.indexOf('<') + 1);
@@ -133,13 +207,18 @@ class TemplatesCompiler {
                 }
 
 
+
+                fragment = null
+
+            } catch (Exception e) {
+                println 'Error occurred during spike-translation compiling. Probably incorrect syntax of spike-translation or around.'
+                println 'Suggested fragment of code: '+fragment.replace(';','').replace('html','').replace('+=','').replace("'",'').replace('\n',' ')
             }
 
 
-        } catch (Exception e) {
-            println 'Error occurred during spike-translation replacement'
-            e.printStackTrace()
         }
+
+
 
         return template
 
@@ -147,11 +226,20 @@ class TemplatesCompiler {
 
     def replaceSpecialCharacters(String line) {
 
-        line = line.replace('@include', 'app.partial.include')
-        line = line.replace('[[[', "'+\"'\"+")
-        line = line.replace(']]]', "+\"'\"+'")
-        line = line.replace("[[", "'+")
-        line = line.replace(']]', "+'")
+        try {
+
+            line = line.replace('@include', 'app.partial.include')
+            line = line.replace('[[[', "'+\"'\"+")
+            line = line.replace(']]]', "+\"'\"+'")
+            line = line.replace("[[", "'+")
+            line = line.replace(']]', "+'")
+
+        }catch (Exception e){
+            println 'Error occurred during template compiling. Probably incorrect syntax with: [[ ]] or [[[ ]]] or @include'
+            println 'Suggested fragment of code: '+line
+        }
+
+
 
         return line
 

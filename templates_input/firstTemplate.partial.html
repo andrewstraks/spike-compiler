@@ -1,20 +1,24 @@
 'import $cookies as app.service.Cookies';
-'import $menu as app.partial.Menu';
+'import $this as app.partial.Menu';
 
 <div>
     <h1> [[$local.pageTitle]] </h1>
 
     # if($local.person && $local.person.hidden == false) {
 
-        <p onclick="$local.click([[[$local.person.id]]])">Name: [[$local.person.name]]</p>
-        <p spike-translation="m_tranlsation_1">Surname: [[$local.person.surname]]</p>
+        <p [click]="$this.click([[[$local.person.id]]])">Name: [[$local.person.name]]</p>
+        <p spike-translation="m_tranlsation_1 ">Surname: [[$local.person.surname]]</p>
 
         #if($cookies.hasCookie('SESSION')) {
         <p>Warning</p>
         # }
 
-        <div spike-translation="m_tranlsation_2">  </div>
+        <div spike-translation="[[$local.name]]">  </div>
         [[ @include($menu, $local.person) ]]
+
+        <select [change]="$this.change()" >
+            <option>xxx</option>
+        </select>
 
     # }
 

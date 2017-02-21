@@ -7,15 +7,19 @@
 ; html += '' 
 ;      if($local.person && $local.person.hidden == false) { 
 ; html += '' 
-; html += '        <p onclick="$local.click('+"'"+$local.person.id+"'"+')">Name: '+$local.person.name+'</p>' 
-; html += '        <p spike-translation="m_tranlsation_1">Surname: '+$local.person.surname+'</p>' 
+; html += '        <p spike-event="click" spike-event-click="app.partial.Menu.click('+"'"+$local.person.id+"'"+')">Name: '+$local.person.name+'</p>' 
+; html += '        <p spike-translation="m_tranlsation_1 ">Surname: '+$local.person.surname+'</p>' 
 ; html += '' 
 ;         if(app.service.Cookies.hasCookie('SESSION')) { 
 ; html += '        <p>Warning</p>' 
 ;          } 
 ; html += '' 
-; html += '        <div spike-translation="m_tranlsation_2">m_tranlsation_2</div>' 
-; html += '        '+ app.partial.include(app.partial.Menu, $local.person) +'' 
+; html += '        <div spike-translation="'+$local.name+'"></div>' 
+; html += '        '+ app.partial.include($menu, $local.person) +'' 
+; html += '' 
+; html += '        <select spike-event="change" spike-event-change="app.partial.Menu.change()" >' 
+; html += '            <option>xxx</option>' 
+; html += '        </select>' 
 ; html += '' 
 ;      } 
 ; html += '' 
@@ -30,13 +34,13 @@
  "        <div class=\"modal-content\">" + 
  "            <div class=\"modal-header\">" + 
  "                <button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>" + 
- "                <h4 class=\"modal-title\" spike-translation=\"m_tranlsation_title\">m_tranlsation_title</h4>" + 
+ "                <h4 spike-translation=\"m_tranlsation_title\" class=\"modal-title\" >m_tranlsation_title class=\"modal-title\"</h4>" + 
  "            </div>" + 
  "            <div class=\"modal-body\">" + 
  "                <p>Some text in the modal.</p>" + 
  "            </div>" + 
  "            <div class=\"modal-footer\">" + 
- "                <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>" + 
+ "                <button  spike-translation=\"m_tranlsation_title\"  type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" > sad dClose</button>" + 
  "            </div>" + 
  "        </div>" + 
  "" + 
