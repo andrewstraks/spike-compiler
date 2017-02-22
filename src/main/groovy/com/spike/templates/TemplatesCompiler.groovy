@@ -100,6 +100,30 @@ class TemplatesCompiler {
 
     def createPartialEvents(String template){
 
+        def events = [
+            'click',
+                'change',
+                'keyup',
+                'keydown',
+                'keypress',
+                'blur',
+                'focus',
+                'dblclick',
+                'die',
+                'hover',
+                'keydown',
+                'mousemove',
+                'mouseenter',
+                'mousedown',
+                'mouseleave',
+                'mouseout',
+                'submit',
+                'trigger',
+                'toggle',
+                'load',
+                'unload'
+        ];
+
         def eventWord = "[";
         def eventsIndexes = [] as Set;
 
@@ -128,7 +152,7 @@ class TemplatesCompiler {
             def eventName = fragment.substring(0, fragment.indexOf(']') + 1)
             eventName = eventName.substring(eventName.indexOf('['), eventName.indexOf(']') + 1);
 
-            if(!eventName.startsWith('["')){
+            if(!eventName.startsWith('["') && events.contains(eventName)){
 
                 eventsList << eventName.trim()
 
