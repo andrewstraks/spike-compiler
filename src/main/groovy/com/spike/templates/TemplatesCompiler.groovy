@@ -61,16 +61,25 @@ class TemplatesCompiler {
 
             def lines = templateFile.readLines()
 
-            lines.each { String line ->
+          if(lines.size() == 0){
+              output += ' " ' + templateFile.getText("UTF-8")+ ' " ';
+              println 'Warning: Template file is almos empty '+templateFile.getName()
+          } else {
 
-                if (line.contains('<!--')) {
-                } else {
-                    output += ' "' + line.replace('"', '\\"') + '" + \n'
-                }
+              lines.each { String line ->
 
-            }
+                  if (line.contains('<!--')) {
+                  } else {
+                      output += ' "' + line.replace('"', '\\"') + '" + \n'
+                  }
 
-            output = output.substring(0, output.lastIndexOf('+'))
+              }
+
+              output = output.substring(0, output.lastIndexOf('+'))
+
+
+          }
+
 
             output += '; \n'
 
@@ -101,7 +110,7 @@ class TemplatesCompiler {
     def createPartialEvents(String template){
 
         def events = [
-            'click',
+                'click',
                 'change',
                 'keyup',
                 'keydown',
