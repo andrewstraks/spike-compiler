@@ -31,7 +31,7 @@ class Executor {
 
         if(type == 'test-templates'){
             type = 'templates'
-            args = [null, 'F:\\layout-prototype\\mobile-new\\dist\\tmp', 'templates_output/templates.js']
+            args = [null, 'templates_input/', 'templates_output/templates.js']
         }else if(type =='test-scripts'){
             type = 'imports-gstrings'
             args = [null, 'scripts_input/test.js', 'scripts_output/compiled.js']
