@@ -7,7 +7,7 @@
 ; html += '' 
 ;      if($local.person && $local.person.hidden == false) { 
 ; html += '' 
-; html += '        <p [click]="app.partial.Menu.click('+"'"+$local.person.id+"'"+')">Name: '+$local.person.name+'</p>' 
+; html += '        <p spike-event="click" spike-event-click="app.partial.Menu.click('+"'"+$local.person.id+"'"+')">Name: '+$local.person.name+'</p>' 
 ; html += '        <p spike-translation="m_tranlsation_1 ">Surname: '+$local.person.surname+'</p>' 
 ; html += '' 
 ;         if(app.service.Cookies.hasCookie('SESSION')) { 
@@ -17,7 +17,7 @@
 ; html += '        <div spike-translation="'+$local.name+'"></div>' 
 ; html += '        '+ app.partial.include($menu, $local.person) +'' 
 ; html += '' 
-; html += '        <select [change]="app.partial.Menu.change()" >' 
+; html += '        <select spike-event="change" spike-event-change="app.partial.Menu.change()" >' 
 ; html += '            <option>xxx</option>' 
 ; html += '        </select>' 
 ; html += '' 

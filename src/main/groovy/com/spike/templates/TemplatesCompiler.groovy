@@ -161,7 +161,7 @@ class TemplatesCompiler {
             def eventName = fragment.substring(0, fragment.indexOf(']') + 1)
             eventName = eventName.substring(eventName.indexOf('['), eventName.indexOf(']') + 1);
 
-            if(!eventName.startsWith('["') && events.contains(eventName)){
+            if(!eventName.startsWith('["') && events.contains(eventName.trim().replace('[','').replace(']',''))){
 
                 eventsList << eventName.trim()
 
