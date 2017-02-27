@@ -5,10 +5,10 @@ app.service.register("Comments", {
 
     getComments: function (postId) {
 
-        var someData = 'name is $[[postId]]';
-        someData += "name is $[postId]";
-        someData += 'name is "$[postId]"';
-        
+        var someData = 'name is'+ postId+'';
+        someData += "name is "+postId+"";
+        someData += 'name is "'+postId+'"';
+
         return $rest.get(this.cachedComments || app.config.apiUrl + '/comments', {
             urlParams: {
                 postId: postId
@@ -36,9 +36,9 @@ app.service.register("Comments", {
             nick: 'Sęp'
         };
 
-        var gstring = 'Person name:'+ person.name+'';
-        gstring += ", surname: "+person.surname+"";
-        gstring = ', nick: "'+person.nick+'" ';
+        var gstring = 'Person name: ${{person.name}}';
+        gstring += ", surname: ${person.surname}";
+        gstring = ', nick: "${{person.nick}}" ';
 
         app.controller.Home.selector.home().click(function(){
             app.router.redirect(app.router.createLink('/someLink'))

@@ -7,7 +7,7 @@ app.service.register("Comments", {
 
         var someData = 'name is $[[postId]]';
         someData += "name is $[postId]";
-        someData += 'name is "$[postId]"';
+        someData += 'name is "$[[postId]]"';
 
         return $rest.get(this.cachedComments || app.config.apiUrl + '/comments', {
             urlParams: {

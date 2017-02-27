@@ -10,8 +10,8 @@ class ScriptsCompiler {
 
     def compileGStrings(String body) {
 
-        def bracketsSingle = "\${";
-        def bracketsDouble = "\${{";
+        def bracketsSingle = "\$[";
+        def bracketsDouble = "\$[[";
         def singleBracketsIndexes = [];
         def doubleBracketsIndexes = [];
 
@@ -27,14 +27,16 @@ class ScriptsCompiler {
             try {
 
                 bracketString = body.substring(bracketIndex - 1, body.length())
-                bracketString = bracketString.substring(0, bracketString.indexOf('}') + 2)
+                bracketString = bracketString.substring(0, bracketString.indexOf(']') + 2)
 
                 Executor.debug bracketString
 
-                body = body.replace(bracketString, "'+" + bracketString.replace('\${{', '').replace('}}', '') + "+'")
+                println bracketString
+
+                body = body.replace(bracketString, "'+" + bracketString.replace('\$[[', '').replace(']]', '') + "+'")
 
             } catch (Exception e) {
-                println 'Error occurred during GStrings compiling. Probably incorrect usage of ${{ }} or around.'
+                println 'Error occurred during GStrings compiling. Probably incorrect usage of $[[ ]] or around.'
                 println 'Suggested fragment of code: ' + bracketString
             }
 
@@ -53,14 +55,16 @@ class ScriptsCompiler {
             try {
 
                 bracketString = body.substring(bracketIndex, body.length())
-                bracketString = bracketString.substring(0, bracketString.indexOf('}') + 1)
+                bracketString = bracketString.substring(0, bracketString.indexOf(']') + 1)
 
                 Executor.debug bracketString
 
-                body = body.replace(bracketString, '"+' + bracketString.replace('\${', '').replace('}', '') + '+"')
+                println bracketString
+
+                body = body.replace(bracketString, '"+' + bracketString.replace('\$[', '').replace(']', '') + '+"')
 
             } catch (Exception e) {
-                println 'Error occurred during GStrings compiling. Probably incorrect usage of ${ } or around.'
+                println 'Error occurred during GStrings compiling. Probably incorrect usage of $[ ] or around.'
                 println 'Suggested fragment of code: ' + bracketString
             }
 
