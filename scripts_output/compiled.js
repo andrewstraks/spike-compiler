@@ -1,18 +1,23 @@
-
-/** 'import $rest as app.rest'; **/app.service.register("Comments", {
+'import $rest as app.rest';
+app.service.register("Comments", {
 
     cachedComments: null,
 
     getComments: function (postId) {
 
-        return app.rest.get(this.cachedComments || app.config.apiUrl + '/comments', {
+        var someData = 'name is $[[postId]]';
+        someData += "name is $[postId]";
+        someData += 'name is "$[postId]"';
+        
+        return $rest.get(this.cachedComments || app.config.apiUrl + '/comments', {
             urlParams: {
                 postId: postId
             }
         });
 
     }
-});/**SPIKE_IMPORT_END**/
+});
+/**SPIKE_IMPORT_END**/
 
 /** 'import $footer as app.component.Footer'; **/
 /** 'import $postsList as app.component.PostsList'; **/app.controller.register("Home", {
