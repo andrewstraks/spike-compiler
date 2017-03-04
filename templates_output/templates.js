@@ -26,26 +26,31 @@
 ; html += '</div>' 
 ; return html 
 ; } 
-; window["_spike_templates"]["templates_input/normal.html"] =  "<button type=\"button\" class=\"btn btn-info btn-lg\" data-toggle=\"modal\" data-target=\"#myModal\">Open Modal</button>" + 
- "" + 
- "<div id=\"myModal\" class=\"modal fade\" role=\"dialog\">" + 
- "    <div class=\"modal-dialog\">" + 
- "" + 
- "        <div class=\"modal-content\">" + 
- "            <div class=\"modal-header\">" + 
- "                <button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>" + 
- "                <h4 spike-translation=\"m_tranlsation_title\" class=\"modal-title\" >m_tranlsation_title class=\"modal-title\"</h4>" + 
- "            </div>" + 
- "            <div class=\"modal-body\">" + 
- "                <p>Some text in the modal.</p>" + 
- "            </div>" + 
- "            <div class=\"modal-footer\">" + 
- "                <button  spike-translation=\"m_tranlsation_title\"  type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" > sad dClose</button>" + 
- "            </div>" + 
- "        </div>" + 
- "" + 
- "    </div>" + 
- "</div>" ; 
+; window["_spike_templates"]["templates_input/normal.html"] = function($local) { 
+; var html = "" 
+; html += '' 
+; html += '<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>' 
+; html += '' 
+; html += '<div id="myModal" class="modal fade" role="dialog">' 
+; html += '    <div class="modal-dialog">' 
+; html += '' 
+; html += '        <div class="modal-content">' 
+; html += '            <div class="modal-header">' 
+; html += '                <button type="button" class="close" spike-event="click" spike-event-click="app.controller.Home.clickOk();" data-dismiss="modal">&times;</button>' 
+; html += '                <h4 spike-translation="m_tranlsation_title" class="modal-title" >m_tranlsation_title class="modal-title"</h4>' 
+; html += '            </div>' 
+; html += '            <div class="modal-body">' 
+; html += '                <p>Some text in the modal.</p>' 
+; html += '            </div>' 
+; html += '            <div class="modal-footer">' 
+; html += '                <button  spike-translation="m_tranlsation_title"  type="button" class="btn btn-default" data-dismiss="modal" > sad dClose</button>' 
+; html += '            </div>' 
+; html += '        </div>' 
+; html += '' 
+; html += '    </div>' 
+; html += '</div>' 
+; return html 
+; } 
 ; window["_spike_templates"]["templates_input/secondTemplate.partial.html"] = function($local) { 
 ; var html = "" 
 ; html += '' 

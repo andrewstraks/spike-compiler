@@ -1,7 +1,4 @@
 package com.spike.templates
-
-import java.util.concurrent.ThreadLocalRandom
-
 /**
  * Created by Dawid on 2017-01-29.
  */
@@ -20,13 +17,19 @@ class TemplatesCompiler {
     def compile(File templateFile) {
 
         String output = null;
+        def isPartial = templateFile.getName().contains('partial.html')
 
-        if (templateFile.getName().contains('partial.html')) {
 
-            output = '; window["' + templatesGlobalDeclaration + '"]["' + this.getFileName(templateFile) + '"] = function($local) { \n'
-            output += '; var html = "" \n'
+        output = '; window["' + templatesGlobalDeclaration + '"]["' + this.getFileName(templateFile) + '"] = function($local) { \n'
+        output += '; var html = "" \n'
 
-            def lines = templateFile.readLines()
+        def lines = templateFile.readLines()
+
+        if (lines.size() == 0) {
+            output += ' " ' + templateFile.getText("UTF-8") + ' " ';
+            println 'Warning: Template file is almost empty ' + templateFile.getName()
+        } else {
+
             def importsReplacements = [:]
 
             lines.each { String line ->
@@ -41,7 +44,13 @@ class TemplatesCompiler {
                 } else if (line.trim().startsWith('#')) {
                     output += '; ' + line.replace('#', '') + ' \n'
                 } else {
-                    output += "; html += '" + this.replaceSpecialCharacters(line) + "' \n"
+
+                    if (isPartial) {
+                        output += "; html += '" + this.replaceSpecialCharacters(line) + "' \n"
+                    } else {
+                        output += "; html += '" + line + "' \n"
+                    }
+
                 }
 
             }
@@ -55,36 +64,8 @@ class TemplatesCompiler {
 
             output = createPartialEvents(output)
 
-        } else {
-
-            output = '; window["' + templatesGlobalDeclaration + '"]["' + this.getFileName(templateFile) + '"] = '
-
-            def lines = templateFile.readLines()
-
-          if(lines.size() == 0){
-              output += ' " ' + templateFile.getText("UTF-8")+ ' " ';
-              println 'Warning: Template file is almos empty '+templateFile.getName()
-          } else {
-
-              lines.each { String line ->
-
-                  if (line.contains('<!--')) {
-                  } else {
-                      output += ' "' + line.replace('"', '\\"') + '" + \n'
-                  }
-
-              }
-
-              output = output.substring(0, output.lastIndexOf('+'))
-
-
-          }
-
-
-            output += '; \n'
-
-
         }
+
 
         output = replaceSpikeTranslations(output)
 
@@ -92,22 +73,7 @@ class TemplatesCompiler {
 
     }
 
-
-    def createUniqueHash(){
-
-        def d = 'ABCDEFGHIJKLMNOPRSTUWYZ1234567890abcdefghijklmnoprstuwxyz'
-        def hash = ''
-
-        for(def i = 0; i < 6; i++){
-            int randIndex = ThreadLocalRandom.current().nextInt(0, d.length() -1);
-            hash += d.split("")[randIndex]
-        }
-
-        return hash
-
-    }
-
-    def createPartialEvents(String template){
+    def createPartialEvents(String template) {
 
         def events = [
                 'click',
@@ -161,7 +127,7 @@ class TemplatesCompiler {
             def eventName = fragment.substring(0, fragment.indexOf(']') + 1)
             eventName = eventName.substring(eventName.indexOf('['), eventName.indexOf(']') + 1);
 
-            if(!eventName.startsWith('["') && events.contains(eventName.trim().replace('[','').replace(']',''))){
+            if (!eventName.startsWith('["') && events.contains(eventName.trim().replace('[', '').replace(']', ''))) {
 
                 eventsList << eventName.trim()
 
@@ -173,7 +139,7 @@ class TemplatesCompiler {
 
         eventsList.each { event ->
 
-            template = template.replace(event, event.replace('[','spike-event="'+event.replace('[','').replace(']','')+'" spike-event-').replace(']',''))
+            template = template.replace(event, event.replace('[', 'spike-event="' + event.replace('[', '').replace(']', '') + '" spike-event-').replace(']', ''))
 
         }
 
@@ -245,7 +211,7 @@ class TemplatesCompiler {
 
             } catch (Exception e) {
                 println 'Error occurred during spike-translation compiling. Probably incorrect syntax of spike-translation or around.'
-                println 'Suggested fragment of code: '+fragment.replace(';','').replace('html','').replace('+=','').replace("'",'').replace('\n',' ')
+                println 'Suggested fragment of code: ' + fragment.replace(';', '').replace('html', '').replace('+=', '').replace("'", '').replace('\n', ' ')
             }
 
 
@@ -267,9 +233,9 @@ class TemplatesCompiler {
             line = line.replace("[[", "'+")
             line = line.replace(']]', "+'")
 
-        }catch (Exception e){
+        } catch (Exception e) {
             println 'Error occurred during template compiling. Probably incorrect syntax with: [[ ]] or [[[ ]]] or @include'
-            println 'Suggested fragment of code: '+line
+            println 'Suggested fragment of code: ' + line
         }
 
 
