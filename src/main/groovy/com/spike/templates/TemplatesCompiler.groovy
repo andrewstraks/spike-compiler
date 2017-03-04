@@ -18,7 +18,7 @@ class TemplatesCompiler {
 
         String output = null;
         def isPartial = templateFile.getName().contains('partial.html')
-
+        def isTemplate = templateFile.getName().contains('template.html')
 
         output = '; window["' + templatesGlobalDeclaration + '"]["' + this.getFileName(templateFile) + '"] = function($local) { \n'
         output += '; var html = "" \n'
@@ -28,6 +28,28 @@ class TemplatesCompiler {
         if (lines.size() == 0) {
             output += ' " ' + templateFile.getText("UTF-8") + ' " ';
             println 'Warning: Template file is almost empty ' + templateFile.getName()
+        } else if (isTemplate) {
+
+            def templateName = this.getFileName(templateFile)
+            templateName = templateName.substring(templateName.lastIndexOf('/')+1, templateName.length())
+            templateName = templateName.substring(0, templateName.indexOf('.'))
+
+            output = '; window["' + templatesGlobalDeclaration + '"]["' + '@template/'+templateName + '"] = '
+
+            lines.each { String line ->
+
+                if (line.contains('<!--')) {
+                } else {
+                    output += ' "' + line.replace('"', '\\"') + '" + \n'
+                }
+
+            }
+
+            output = output.substring(0, output.lastIndexOf('+'))
+
+            output += '; \n'
+
+
         } else {
 
             def importsReplacements = [:]
@@ -65,7 +87,6 @@ class TemplatesCompiler {
             output = createPartialEvents(output)
 
         }
-
 
         output = replaceSpikeTranslations(output)
 

@@ -26,6 +26,17 @@
 ; html += '</div>' 
 ; return html 
 ; } 
+; window["_spike_templates"]["@template/independent"] =  "<div>" + 
+ "    <p id=\"someIndependendId\">" + 
+ "        Hello" + 
+ "    </p>" + 
+ "" + 
+ "    <ul>" + 
+ "        <li>1. Be ok</li>" + 
+ "        <li>2. Be ok2</li>" + 
+ "        <li>3. Be ok3</li>" + 
+ "    </ul>" + 
+ "</div>" ; 
 ; window["_spike_templates"]["templates_input/normal.html"] = function($local) { 
 ; var html = "" 
 ; html += '' 
