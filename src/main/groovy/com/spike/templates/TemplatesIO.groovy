@@ -7,7 +7,21 @@ import groovy.io.FileType
  */
 class TemplatesIO {
 
-    def getFileList(srcPath){
+    def getFileListByPaths(def pathsList){
+
+        def list = []
+
+        pathsList.each {
+            if(it){
+                list <<  new File(it)
+            }
+        }
+
+        return list
+
+    }
+
+    def getFileList(def srcPath){
 
         def list = []
 
@@ -40,6 +54,7 @@ class TemplatesIO {
     def saveConcatedFiles(def functionBodiesList, def distPath){
 
         File distFile = new File(distPath)
+        distFile.getParentFile().mkdirs()
         distFile.write(functionBodiesList.join(""))
 
     }
