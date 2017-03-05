@@ -2,7 +2,6 @@ package com.spike
 
 import com.spike.scripts.ScriptsCompiler
 import com.spike.scripts.ScriptsIO
-import com.spike.security.SecurityCompiler
 import com.spike.templates.TemplatesCompiler
 import com.spike.templates.TemplatesIO
 
@@ -25,7 +24,6 @@ class Executor {
     static ScriptsCompiler scriptsCompiler = new ScriptsCompiler()
     static TemplatesIO templatesIO = new TemplatesIO()
     static TemplatesCompiler templatesCompiler = new TemplatesCompiler()
-    static SecurityCompiler securityCompiler = new SecurityCompiler()
 
     static void main(def args) {
 
@@ -37,11 +35,7 @@ class Executor {
         }else if(type =='test-scripts'){
             type = 'imports-gstrings'
             args = [null, 'scripts_input/test.js', 'scripts_output/compiled.js']
-        }else if(type =='test-security'){
-            type = 'security'
-            args = [null, 'security_output/vendor.min.js', 'security_input/spike-framework.min.js', 'security_input/templates.min.js', 'security_input/app.min.js']
         }
-
 
         if (type == 'imports-gstrings') {
 
@@ -68,23 +62,6 @@ class Executor {
             }
 
             templatesIO.saveConcatedFiles(functionBodies, args[2])
-
-
-        }else if (type == 'security') {
-
-            def argsList = args as List<String>
-
-            def files = templatesIO.getFileListByPaths(argsList.subList(2  as Integer, argsList.size() as Integer))
-
-            def vendorBody = []
-
-            files.each {
-
-                vendorBody << securityCompiler.secure(it.getText())
-
-            }
-
-            templatesIO.saveConcatedFiles(vendorBody, args[1])
 
 
         }
