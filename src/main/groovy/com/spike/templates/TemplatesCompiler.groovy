@@ -40,6 +40,7 @@ class TemplatesCompiler {
 
                 if (line.contains('<!--')) {
                 } else {
+                    line =  replaceSpikeTranslations(line)
                     output += ' "' + line.replace('"', '\\"') + '" + \n'
                 }
 
@@ -67,6 +68,7 @@ class TemplatesCompiler {
                     output += '; ' + line.replace('#', '') + ' \n'
                 } else {
 
+                    line =  replaceSpikeTranslations(line)
                     if (isPartial) {
                         output += "; html += '" + this.replaceSpecialCharacters(line) + "' \n"
                     } else {
@@ -87,8 +89,6 @@ class TemplatesCompiler {
             output = createPartialEvents(output)
 
         }
-
-        output = replaceSpikeTranslations(output)
 
         return output
 
@@ -171,7 +171,6 @@ class TemplatesCompiler {
 
     def replaceSpikeTranslations(String template) {
 
-
         def translationWord = "spike-translation";
         def translationIndexes = [] as Set;
 
@@ -198,39 +197,36 @@ class TemplatesCompiler {
 
             try {
 
-                fragment = fragment.substring(0, fragment.indexOf('<') + 1)
+                if(fragment.contains('<') && fragment.contains('>')){
 
-                def between = fragment.substring(fragment.indexOf('>'), fragment.indexOf('<') + 1);
+                    fragment = fragment.substring(0, fragment.indexOf('<') + 1)
 
-                if (between.replace('<', '').replace('>', '').trim().length() == 0) {
+                    def inElement = fragment.substring(fragment.indexOf(">"), fragment.indexOf("<")+1).trim()
 
-                    def translation = fragment.substring(fragment.indexOf('spike-translation='), fragment.length())
-                    translation = translation.substring(0, translation.lastIndexOf('"') + 1)
-                    translation = translation.replace('spike-translation=', '')
+                    if(inElement.length() == 2){
 
-                    if (translation.startsWith('\\')) {
-                        translation = translation.substring(2, translation.length())
-                        translation = translation.substring(0, translation.indexOf('\\"')) + translation.substring(translation.indexOf('\\"') + 2, translation.length())
-                    } else {
-                        translation = translation.substring(1, translation.length())
-                        translation = translation.substring(0, translation.indexOf('"')) + translation.substring(translation.indexOf('"') + 1, translation.length())
+                        def translationContent = fragment.substring(fragment.indexOf('"')+1, fragment.length())
+                        translationContent = translationContent.substring(0, translationContent.indexOf('"')).trim()
+
+                        def replacement = fragment.replace('><', '>'+translationContent+'<')
+
+//                    println fragment
+//                    println 'translationContent: '+translationContent
+//                    println 'inElement: '+inElement
+//                    println 'replacement: '+replacement
+//                    println '\n*************************'
+
+                        template = template.replace(fragment, replacement)
+
+
                     }
 
-                    if (translation.contains("'") || translation.contains(";")) {
-                        translation = translation.substring(0, translation.indexOf("'"))
-                    }
-
-                    def fragmentToReplace = fragment.replace(between, '>' + translation + '<');
-
-                    template = template.replace(fragment, fragmentToReplace)
+                    fragment = null
 
                 }
 
-
-
-                fragment = null
-
             } catch (Exception e) {
+                e.printStackTrace()
                 println 'Error occurred during spike-translation compiling. Probably incorrect syntax of spike-translation or around.'
                 println 'Suggested fragment of code: ' + fragment.replace(';', '').replace('html', '').replace('+=', '').replace("'", '').replace('\n', ' ')
             }

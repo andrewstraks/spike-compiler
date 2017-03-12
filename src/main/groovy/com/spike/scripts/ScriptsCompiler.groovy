@@ -275,10 +275,6 @@ class ScriptsCompiler {
                 replacement = replacement.replace(lastBrackets, lastBracketsNew)
                 replacement = replacement.replace('__ending__','')
 
-                println replacement
-
-
-
             } catch (Exception e) {
                 println 'Error occurred during $super word compiling. Probably incorrect usage of $super or around.'
                 println 'No suggested fragment of code, fail on preparation'

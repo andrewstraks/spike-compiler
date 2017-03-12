@@ -9,11 +9,14 @@
         <p [click]="$this.click([[[$local.person.id]]])">Name: [[$local.person.name]]</p>
         <p spike-translation="m_tranlsation_1 ">Surname: [[$local.person.surname]]</p>
 
+        <p spike-translation="m_tranlsation_1 "></p>
+
         #if($cookies.hasCookie('SESSION')) {
         <p>Warning</p>
         # }
 
         <div spike-translation="[[$local.name]]">  </div>
+    <div spike-translation="[[$local.name]]"></div>
         [[ @include($menu, $local.person) ]]
 
         <select [change]="$this.change()" >
