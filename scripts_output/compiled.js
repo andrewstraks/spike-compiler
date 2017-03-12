@@ -64,14 +64,14 @@ app.component.register("Menu", {
 });
 /**SPIKE_IMPORT_END**/
 
-/** 'import $postService as app.service.Post'; **/app.abstract.register("TestAbstract", {
+/** 'import $postService as app.service.Post'; **/app.abstract.register("TestAbstract",function(){ 
+ var $super =   {
 
     createRecentPostsList: function () {
- var ___super = this; 
 
         app.service.Post.getRecentPosts()
             .then(function (posts) {
-                ___super.createPostsList(posts, 5);
+                $super.createPostsList(posts, 5);
             })
             .catch(function (error) {
             });
@@ -79,11 +79,10 @@ app.component.register("Menu", {
     },
 
     createAllPostsList: function (arg1, arg2) {
- var ___super = this; 
 
         app.service.Post.getPosts()
             .then(function (posts) {
-                ___super.createPostsList(posts, 20);
+                $super.createPostsList(posts, 20);
             })
             .catch(function (error) {
             });
@@ -93,7 +92,6 @@ app.component.register("Menu", {
             name: 'Peter',
 
             getName: function(){
- var ___super = this; 
                 app.log('name');
             }
 
@@ -102,7 +100,9 @@ app.component.register("Menu", {
 
 
 
-});/**SPIKE_IMPORT_END**/
+} 
+ return $super; 
+} );/**SPIKE_IMPORT_END**/
 /** 'import $postService as app.service.Post'; **/
 /** 'import $postsList as app.component.PostList'; **/app.component.register("PostsList", {
 

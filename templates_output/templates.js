@@ -79,7 +79,9 @@
 ;     }); 
 ; html += '' 
 ; html += '    <h2 spike-translation="m_tranlsation_5"' 
-; html += '    data-id="2">m_tranlsation_5</h2>' 
+; html += '    data-id="2">' 
+; html += '        '+"'"+'someData'+"'"+'' 
+; html += '    </h2>' 
 ; html += '' 
 ; html += '</div>' 
 ; return html 

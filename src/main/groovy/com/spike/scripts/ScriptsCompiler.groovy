@@ -200,7 +200,7 @@ class ScriptsCompiler {
                     if (_this.contains('app.abstract')) {
 
                         selfThis = true
-                        currentImports['$super'] = '___super'
+                        //currentImports['$super'] = '___super'
 
                     } else {
                         currentImports['$this'] = getThis(toCompile)
@@ -216,7 +216,7 @@ class ScriptsCompiler {
 
                     if (selfThis) {
 
-                      //  compiled = compileSuper(compiled)
+                        compiled = compileSuper(compiled)
 
                     }
 
@@ -252,59 +252,47 @@ class ScriptsCompiler {
 
     def compileSuper(compiled) {
 
+
         try {
 
-            def replacement = '\n var ___super = this;'
-
-            def functionWords = [": function", ":function"];
-            def functionIndexes = [] as Set;
+            def fragment = null
+            def replacement = null
 
             try {
 
-                functionWords.each { functionWord ->
+                fragment = compiled.substring(0, compiled.length())
+                fragment = fragment.substring(fragment.indexOf('{')-1, fragment.length())
 
-                    int functionIndex = compiled.indexOf(functionWord);
-                    while (functionIndex >= 0) {
+                replacement = ' var $super =  ' + fragment
+                replacement = ' function(){ \n' + replacement
+
+                replacement = replacement.trim()+'__ending__'
+
+                def lastBrackets = replacement.substring(replacement.lastIndexOf(')'), replacement.length())
+
+                def lastBracketsNew = ' \n return $super; \n} ' + lastBrackets
+
+                replacement = replacement.replace(lastBrackets, lastBracketsNew)
+                replacement = replacement.replace('__ending__','')
+
+                println replacement
 
 
-                        if (functionIndex > 0) {
-                            functionIndexes << functionIndex;
-                        }
-
-                        functionIndex = compiled.indexOf(functionWord, functionIndex + functionWord.length());
-
-                        if (functionIndex > 0) {
-                            functionIndexes << functionIndex;
-                        }
-
-
-                    }
-
-                }
 
             } catch (Exception e) {
                 println 'Error occurred during $super word compiling. Probably incorrect usage of $super or around.'
                 println 'No suggested fragment of code, fail on preparation'
             }
 
-            def fragment = null
-            functionIndexes.each { index ->
+            try {
 
-                try {
+                compiled = compiled.replace(fragment, replacement)
 
-                    fragment = compiled.substring(index, compiled.length())
-                    fragment = fragment.substring(fragment.indexOf('{') + 1, fragment.length())
-
-                    compiled = compiled.replace(fragment, replacement + ' ' + fragment)
-
-                } catch (Exception e) {
-                    println 'Error occurred during $super word compiling. Probably incorrect usage of $super or around.'
-                    println 'Suggested fragment of code: ' + fragment.replace(';', '').replace('html', '').replace('+=', '').replace("'", '').replace('\n', ' ')
-                }
-
-                fragment = null
-
+            } catch (Exception e) {
+                println 'Error occurred during $super word compiling. Probably incorrect usage of $super or around.'
+                println 'Suggested fragment of code: ' + fragment.replace(';', '').replace('html', '').replace('+=', '').replace("'", '').replace('\n', ' ')
             }
+
 
         } catch (Exception e) {
             println 'Error occurred during compiling $super word. Analyse your $super usages.'
