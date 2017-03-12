@@ -31,7 +31,6 @@ class ScriptsCompiler {
 
                 Executor.debug bracketString
 
-                println bracketString
 
                 body = body.replace(bracketString, "'+" + bracketString.replace('\$[[', '').replace(']]', '') + "+'")
 
@@ -59,7 +58,6 @@ class ScriptsCompiler {
 
                 Executor.debug bracketString
 
-                println bracketString
 
                 body = body.replace(bracketString, '"+' + bracketString.replace('\$[', '').replace(']', '') + '+"')
 
