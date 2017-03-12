@@ -263,14 +263,14 @@ class ScriptsCompiler {
                 fragment = compiled.substring(0, compiled.length())
                 fragment = fragment.substring(fragment.indexOf('{')-1, fragment.length())
 
-                replacement = ' var $super =  ' + fragment
-                replacement = ' function(){ \n' + replacement
+                replacement = '  $super = app.util.System.extend($super,   ' + fragment
+                replacement = ' function($super){ \n' + replacement
 
                 replacement = replacement.trim()+'__ending__'
 
                 def lastBrackets = replacement.substring(replacement.lastIndexOf(')'), replacement.length())
 
-                def lastBracketsNew = ' \n return $super; \n} ' + lastBrackets
+                def lastBracketsNew = ' \n ); return $super; \n} ' + lastBrackets
 
                 replacement = replacement.replace(lastBrackets, lastBracketsNew)
                 replacement = replacement.replace('__ending__','')
