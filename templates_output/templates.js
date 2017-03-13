@@ -26,6 +26,9 @@
 ; html += '' 
 ;      } 
 ; html += '' 
+; html += '    <div class="col-xs-3 transaction-column">'+ $messages.get('m_betSlipBetType_' + transaction.slipType) +' </div>' 
+; html += '    <div class="col-xs-2 transaction-column" spike-translation="m_transaction_'+ transaction.resultText +'">m_transaction_'+ transaction.resultText +'</div>' 
+; html += '' 
 ; html += '</div>' 
 ; return html 
 ; } 
@@ -83,7 +86,6 @@
 ; html += '' 
 ; html += '    <h2 spike-translation="m_tranlsation_5"' 
 ; html += '    data-id="2">' 
-; html += '        '+"'"+'someData'+"'"+'' 
 ; html += '    </h2>' 
 ; html += '' 
 ; html += '</div>' 
