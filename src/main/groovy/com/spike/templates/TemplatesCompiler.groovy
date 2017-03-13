@@ -244,7 +244,6 @@ class TemplatesCompiler {
 
         try {
 
-            line = line.replace("'", "'+\"'\"+'")
             line = line.replace('@include', 'app.partial.include')
             line = line.replace('[[[', "'+\"'\"+")
             line = line.replace(']]]', "+\"'\"+'")
