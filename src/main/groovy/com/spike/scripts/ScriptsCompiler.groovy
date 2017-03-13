@@ -214,7 +214,7 @@ class ScriptsCompiler {
 
                     if (selfThis) {
 
-                        compiled = compileSuper(compiled)
+                  //      compiled = compileSuper(compiled)
 
                     }
 

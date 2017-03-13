@@ -64,8 +64,7 @@ app.component.register("Menu", {
 });
 /**SPIKE_IMPORT_END**/
 
-/** 'import $postService as app.service.Post'; **/app.abstract.register("TestAbstract",function($super){ 
-  $super = app.util.System.extend($super,    {
+/** 'import $postService as app.service.Post'; **/app.abstract.register("TestAbstract", {
 
     createRecentPostsList: function () {
 
@@ -100,9 +99,7 @@ app.component.register("Menu", {
 
 
 
-} 
- ); return $super; 
-} );/**SPIKE_IMPORT_END**/
+});/**SPIKE_IMPORT_END**/
 /** 'import $postService as app.service.Post'; **/
 /** 'import $postsList as app.component.PostList'; **/app.component.register("PostsList", {
 
