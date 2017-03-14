@@ -32,8 +32,9 @@
 ; html += '</div>' 
 ; return html 
 ; } 
-; window["_spike_templates"]["@template/independent"] =  "<div>" + 
- "    <p id=\"someIndependendId\">" + 
+; window["_spike_templates"]["@template/independent"] =  "" + 
+ "<div>" + 
+ "    <p id=\"someIndependendId\" spike-event=\"click\" spike-event-click=\"app.component.TopMenu.open()\">" + 
  "        Hello" + 
  "    </p>" + 
  "" + 

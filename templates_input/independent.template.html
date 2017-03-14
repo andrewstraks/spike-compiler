@@ -1,5 +1,7 @@
+'import $topMenu as app.component.TopMenu';
+
 <div>
-    <p id="someIndependendId">
+    <p id="someIndependendId" [click]="$topMenu.open()">
         Hello
     </p>
 

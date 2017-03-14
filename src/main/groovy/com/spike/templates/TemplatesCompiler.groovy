@@ -34,11 +34,18 @@ class TemplatesCompiler {
             templateName = templateName.substring(templateName.lastIndexOf('/')+1, templateName.length())
             templateName = templateName.substring(0, templateName.indexOf('.'))
 
+
             output = '; window["' + templatesGlobalDeclaration + '"]["' + '@template/'+templateName + '"] = '
+
+            def importsReplacements = [:]
 
             lines.each { String line ->
 
                 if (line.contains('<!--')) {
+                }else  if (line.startsWith("'import")) {
+                    def key = line.replace("'", '').substring(0, line.indexOf('as') - 1).replace('import', '').trim()
+                    def value = line.substring(line.indexOf('as') + 2, line.length()).replace("'", '').replace(";", '').trim()
+                    importsReplacements[key] = value;
                 } else {
                     line =  replaceSpikeTranslations(line)
                     output += ' "' + line.replace('"', '\\"') + '" + \n'
@@ -49,6 +56,12 @@ class TemplatesCompiler {
             output = output.substring(0, output.lastIndexOf('+'))
 
             output += '; \n'
+
+            importsReplacements.each { key, val ->
+                output = output.replace(key.trim(), val.trim())
+            }
+
+            output = createPartialEvents(output, true)
 
 
         } else {
@@ -86,7 +99,7 @@ class TemplatesCompiler {
                 output = output.replace(key.trim(), val.trim())
             }
 
-            output = createPartialEvents(output)
+            output = createPartialEvents(output, false)
 
         }
 
@@ -94,7 +107,7 @@ class TemplatesCompiler {
 
     }
 
-    def createPartialEvents(String template) {
+    def createPartialEvents(String template, def replaceCiapki) {
 
         def events = [
                 'click',
@@ -160,7 +173,11 @@ class TemplatesCompiler {
 
         eventsList.each { event ->
 
-            template = template.replace(event, event.replace('[', 'spike-event="' + event.replace('[', '').replace(']', '') + '" spike-event-').replace(']', ''))
+            if(replaceCiapki){
+                template = template.replace(event, event.replace('[', 'spike-event=\\"' + event.replace('[', '').replace(']', '') + '\\" spike-event-').replace(']', ''))
+            }else{
+                template = template.replace(event, event.replace('[', 'spike-event="' + event.replace('[', '').replace(']', '') + '" spike-event-').replace(']', ''))
+            }
 
         }
 
