@@ -7,6 +7,8 @@
 ; html += '' 
 ;      if($local.person && $local.person.hidden == false) { 
 ; html += '' 
+; html += '    <button spike-event="click" spike-event-click="app.router.location('+"'"+'/post/1'+"'"+')">dsdsds</button>' 
+; html += '' 
 ; html += '        <p spike-event="click" spike-event-click="app.partial.Menu.click('+"'"+$local.person.id+"'"+')">Name: '+$local.person.name+'</p>' 
 ; html += '        <p spike-translation="m_tranlsation_1 ">Surname: '+$local.person.surname+'</p>' 
 ; html += '' 
@@ -51,6 +53,8 @@
 ; html += '' 
 ; html += '<div id="myModal" class="modal fade" role="dialog">' 
 ; html += '    <div class="modal-dialog">' 
+; html += '' 
+; html += '        <button spike-event="click" spike-event-click="app.router.location('+"'"+'/post/1'+"'"+')">dsdsds</button>' 
 ; html += '' 
 ; html += '        <div class="modal-content">' 
 ; html += '            <div class="modal-header">' 

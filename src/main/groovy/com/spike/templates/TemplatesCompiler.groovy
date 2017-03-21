@@ -48,7 +48,7 @@ class TemplatesCompiler {
                     importsReplacements[key] = value;
                 } else {
                     line =  replaceSpikeTranslations(line)
-                    output += ' "' + line.replace('"', '\\"') + '" + \n'
+                    output += ' "' + this.escapeEvents(line.replace('"', '\\"')) + '" + \n'
                 }
 
             }
@@ -81,11 +81,11 @@ class TemplatesCompiler {
                     output += '; ' + line.replace('#', '') + ' \n'
                 } else {
 
-                    line =  replaceSpikeTranslations(line)
+                    line =  replaceSpikeTranslations(line);
                     if (isPartial) {
                         output += "; html += '" + this.replaceSpecialCharacters(line) + "' \n"
                     } else {
-                        output += "; html += '" + line + "' \n"
+                        output += "; html += '" + this.escapeEvents(line) + "' \n"
                     }
 
                 }
@@ -171,6 +171,7 @@ class TemplatesCompiler {
 
         }
 
+
         eventsList.each { event ->
 
             if(replaceCiapki){
@@ -254,6 +255,25 @@ class TemplatesCompiler {
 
 
         return template
+
+    }
+
+    def escapeEvents(String line){
+
+        try {
+
+            line = line.replace('[[[', "'+\"'\"+")
+            line = line.replace(']]]', "+\"'\"+'")
+
+        } catch (Exception e) {
+            println 'Error occurred during template compiling. Probably incorrect syntax with: [[ ]] or [[[ ]]] or @include'
+            println 'Suggested fragment of code: ' + line
+        }
+
+
+
+        return line
+
 
     }
 
