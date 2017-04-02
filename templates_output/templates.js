@@ -5,7 +5,7 @@
 ; html += '<div>' 
 ; html += '    <h1> '+$local.pageTitle+' </h1>' 
 ; html += '' 
-;      if($local.person && $local.person.hidden == false) { 
+      if($local.person && $local.person.hidden == false) { 
 ; html += '' 
 ; html += '    <button spike-event="click" spike-event-click="app.router.location('+"'"+'/post/1'+"'"+')">dsdsds</button>' 
 ; html += '' 
@@ -14,9 +14,9 @@
 ; html += '' 
 ; html += '        <p spike-translation="m_tranlsation_1 ">m_tranlsation_1</p>' 
 ; html += '' 
-;         if(app.service.Cookies.hasCookie('SESSION')) { 
+         if(app.service.Cookies.hasCookie('SESSION')) { 
 ; html += '        <p>Warning</p>' 
-;          } 
+          } 
 ; html += '' 
 ; html += '        <div spike-translation="'+$local.name+'">  </div>' 
 ; html += '    <div spike-translation="'+$local.name+'">'+$local.name+'</div>' 
@@ -26,7 +26,12 @@
 ; html += '            <option>xxx</option>' 
 ; html += '        </select>' 
 ; html += '' 
-;      } 
+          var declareObject = { 
+            name: "Ok", 
+            id: 5, 
+          } 
+; html += '' 
+      } 
 ; html += '' 
 ; html += '    <div class="col-xs-3 transaction-column">'+ $messages.get('m_betSlipBetType_' + transaction.slipType) +' </div>' 
 ; html += '    <div class="col-xs-2 transaction-column" spike-translation="m_transaction_'+ transaction.resultText +'">m_transaction_'+ transaction.resultText +'</div>' 
@@ -81,7 +86,7 @@
 ; html += '' 
 ; html += '    '+ app.component.Menu.getCategories($local.pageTitle) +'' 
 ; html += '' 
-;      $.each($local.users, function(user, i) { 
+      $.each($local.users, function(user, i) { 
 ; html += '' 
 ; html += '        <p>Id: '+user.id+'; Name: '+user.name+'</p>' 
 ; html += '' 

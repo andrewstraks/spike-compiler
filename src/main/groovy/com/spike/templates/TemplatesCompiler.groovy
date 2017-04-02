@@ -78,7 +78,8 @@ class TemplatesCompiler {
                     importsReplacements[key] = value;
 
                 } else if (line.trim().startsWith('#')) {
-                    output += '; ' + line.replace('#', '') + ' \n'
+
+                    output += (line.endsWith(',') || line.endsWith('{') || line.endsWith('}') ? ' ' : '; ') + line.replace('#', '') + ' \n'
                 } else {
 
                     line =  replaceSpikeTranslations(line);
