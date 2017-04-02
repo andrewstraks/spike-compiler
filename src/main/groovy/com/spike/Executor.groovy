@@ -1,5 +1,6 @@
 package com.spike
 
+import com.spike.cli.CliCreator
 import com.spike.scripts.ScriptsCompiler
 import com.spike.scripts.ScriptsIO
 import com.spike.templates.TemplatesCompiler
@@ -24,17 +25,44 @@ class Executor {
     static ScriptsCompiler scriptsCompiler = new ScriptsCompiler()
     static TemplatesIO templatesIO = new TemplatesIO()
     static TemplatesCompiler templatesCompiler = new TemplatesCompiler()
+    static CliCreator cliCreator = new CliCreator()
 
     static void main(def args) {
 
+        def cli = {
+
+            switch (args[1]) {
+                case 'component': cliCreator.createComponent(args[0], args[2]); break;
+                case 'partial': cliCreator.createPartial(args[0], args[2]); break;
+                case 'controller': cliCreator.createController(args[0], args[2]); break;
+                case 'modal': cliCreator.createModal(args[0], args[2]); break;
+                case 'service': cliCreator.createService(args[0], args[2]); break;
+                case 'util': cliCreator.createUtil(args[0], args[2]); break;
+            }
+
+        }
+
         def type = args[0]
 
-        if(type == 'test-templates'){
+        if (type == 'test-templates') {
             type = 'templates'
             args = [null, 'templates_input/', 'templates_output/templates.js']
-        }else if(type =='test-scripts'){
+        } else if (type == 'test-scripts') {
             type = 'imports-gstrings'
             args = [null, 'scripts_input/test.js', 'scripts_output/compiled.js']
+        } else if (type == 'test-cli') {
+            args = ['cli/test/component/', 'component', 'UserPanel']
+            cli(args)
+            args = ['cli/test/controller/', 'controller', 'Home']
+            cli(args)
+            args = ['cli/test/modal/', 'modal', 'Message']
+            cli(args)
+            args = ['cli/test/partial/', 'partial', 'LoginForm']
+            cli(args)
+            args = ['cli/test/service/', 'service', 'Auth']
+            cli(args)
+            args = ['cli/test/util', 'util', 'Utils']
+            cli(args)
         }
 
         if (type == 'imports-gstrings') {
@@ -63,6 +91,10 @@ class Executor {
 
             templatesIO.saveConcatedFiles(functionBodies, args[2])
 
+
+        } else if (type == 'cli') {
+
+            cli(args)
 
         }
 
