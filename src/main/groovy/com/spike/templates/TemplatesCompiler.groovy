@@ -84,6 +84,9 @@ class TemplatesCompiler {
 
                     line =  replaceSpikeTranslations(line);
                     if (isPartial) {
+
+                       // line = createPartialSpecialAttributes(line)
+
                         output += "; html += '" + this.replaceSpecialCharacters(line) + "' \n"
                     } else {
                         output += "; html += '" + this.escapeEvents(line) + "' \n"
@@ -105,6 +108,46 @@ class TemplatesCompiler {
         }
 
         return output
+
+    }
+
+    def createPartialSpecialAttributes(String str){
+
+        def splitted = str.split('\n')
+
+        for(int i = 0; i < splitted.length; i++){
+
+            def line = splitted[i]
+
+            def index = line.indexOf('spike="');
+
+            try {
+                if(index > -1){
+                    def index2 = line.replace('spike="','').indexOf('"')
+
+                    println index
+                    println index2
+                    println line
+                    def basicLine = line.substring(index, index2+7)
+
+                    println basicLine
+
+                    def line2 = basicLine.substring(0,basicLine.length()).replace('spike="','')
+                    line2 = '\'+ ('+line2 +') +\''
+
+                    splitted[i] = line.replace(basicLine, line2)
+                }
+            }catch (Exception e){
+                e.printStackTrace()
+            }
+
+
+
+        }
+
+
+
+        return  splitted.join('\n')
 
     }
 

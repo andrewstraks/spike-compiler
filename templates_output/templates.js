@@ -19,10 +19,10 @@
           } 
 ; html += '' 
 ; html += '        <div spike-translation="'+$local.name+'">  </div>' 
-; html += '    <div spike-translation="'+$local.name+'">'+$local.name+'</div>' 
+; html += '     <div spike-translation="'+$local.name+'">'+$local.name+'</div>' 
 ; html += '        '+ app.partial.include($menu, $local.person) +'' 
 ; html += '' 
-; html += '        <select spike-event="change" spike-event-change="app.partial.Menu.change()" >' 
+; html += '        <select spike-event="change" spike-event-change="app.partial.Menu.change()"' 
 ; html += '            <option>xxx</option>' 
 ; html += '        </select>' 
 ; html += '' 
