@@ -31,13 +31,13 @@ class Executor {
 
         def cli = {
 
-            switch (args[1]) {
-                case 'component': cliCreator.createComponent(args[0], args[2]); break;
-                case 'partial': cliCreator.createPartial(args[0], args[2]); break;
-                case 'controller': cliCreator.createController(args[0], args[2]); break;
-                case 'modal': cliCreator.createModal(args[0], args[2]); break;
-                case 'service': cliCreator.createService(args[0], args[2]); break;
-                case 'util': cliCreator.createUtil(args[0], args[2]); break;
+            switch (args[2]) {
+                case 'component': cliCreator.createComponent(args[1], args[3]); break;
+                case 'partial': cliCreator.createPartial(args[1], args[3]); break;
+                case 'controller': cliCreator.createController(args[1], args[3]); break;
+                case 'modal': cliCreator.createModal(args[1], args[3]); break;
+                case 'service': cliCreator.createService(args[1], args[3]); break;
+                case 'util': cliCreator.createUtil(args[1], args[3]); break;
             }
 
         }
@@ -51,17 +51,17 @@ class Executor {
             type = 'imports-gstrings'
             args = [null, 'scripts_input/test.js', 'scripts_output/compiled.js']
         } else if (type == 'test-cli') {
-            args = ['cli/test/component/', 'component', 'UserPanel']
+            args = ['cli', 'cli/test/component/', 'component', 'UserPanel']
             cli(args)
-            args = ['cli/test/controller/', 'controller', 'Home']
+            args = ['cli', 'cli/test/controller/', 'controller', 'Home']
             cli(args)
-            args = ['cli/test/modal/', 'modal', 'Message']
+            args = ['cli', 'cli/test/modal/', 'modal', 'Message']
             cli(args)
-            args = ['cli/test/partial/', 'partial', 'LoginForm']
+            args = ['cli', 'cli/test/partial/', 'partial', 'LoginForm']
             cli(args)
-            args = ['cli/test/service/', 'service', 'Auth']
+            args = ['cli', 'cli/test/service/', 'service', 'Auth']
             cli(args)
-            args = ['cli/test/util', 'util', 'Utils']
+            args = ['cli', 'cli/test/util', 'util', 'Utils']
             cli(args)
         }
 
