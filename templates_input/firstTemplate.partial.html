@@ -9,9 +9,9 @@
     <button [click]="app.router.location([[['/post/1']]])" [mouseover]="$this.dupa()">dsdsds</button>
 
         <p [click]="$this.click([[[$local.person.id]]])">Name: [[$local.person.name]]</p>
-        <p spike-translation="m_tranlsation_1 ">Surname: [[$local.person.surname]]</p>
+        <p spike-translation="tranlsation_1 ">Surname: [[$local.person.surname]]</p>
 
-        <p spike-translation="m_tranlsation_1 "></p>
+        <p spike-translation="tranlsation_1 "></p>
 
         #if($cookies.hasCookie('SESSION')) {
         <p>Warning</p>
@@ -32,7 +32,7 @@
 
     # }
 
-    <div class="col-xs-3 transaction-column">[[ $messages.get('m_betSlipBetType_' + transaction.slipType) ]] </div>
-    <div class="col-xs-2 transaction-column" spike-translation="m_transaction_[[ transaction.resultText ]]"></div>
+    <div class="col-xs-3 transaction-column">[[ $messages.get('xxxxxx' + transaction.xxxxx) ]] </div>
+    <div class="col-xs-2 transaction-column" spike-translation="transaction_[[ transaction.dsds ]]"></div>
 
 </div>

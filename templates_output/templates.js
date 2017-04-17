@@ -7,12 +7,12 @@
 ; html += '' 
       if($local.person && $local.person.hidden == false) { 
 ; html += '' 
-; html += '    <button  spike-event-click="app.router.location('+"'"+'/post/1'+"'"+')"  spike-event-mouseover="app.partial.Menu.dupa()">dsdsds</button>' 
+; html += '    <button spike-unbinded spike-event-click="app.router.location('+"'"+'/post/1'+"'"+')" spike-unbinded spike-event-mouseover="app.partial.Menu.dupa()">dsdsds</button>' 
 ; html += '' 
-; html += '        <p  spike-event-click="app.partial.Menu.click('+"'"+$local.person.id+"'"+')">Name: '+$local.person.name+'</p>' 
-; html += '        <p spike-translation="m_tranlsation_1 ">Surname: '+$local.person.surname+'</p>' 
+; html += '        <p spike-unbinded spike-event-click="app.partial.Menu.click('+"'"+$local.person.id+"'"+')">Name: '+$local.person.name+'</p>' 
+; html += '        <p spike-translation="tranlsation_1 ">Surname: '+$local.person.surname+'</p>' 
 ; html += '' 
-; html += '        <p spike-translation="m_tranlsation_1 ">m_tranlsation_1</p>' 
+; html += '        <p spike-translation="tranlsation_1 ">tranlsation_1</p>' 
 ; html += '' 
          if(app.service.Cookies.hasCookie('SESSION')) { 
 ; html += '        <p>Warning</p>' 
@@ -22,7 +22,7 @@
 ; html += '     <div spike-translation="'+$local.name+'">'+$local.name+'</div>' 
 ; html += '        '+ app.partial.include($menu, $local.person) +'' 
 ; html += '' 
-; html += '        <select  spike-event-change="app.partial.Menu.change()">' 
+; html += '        <select spike-unbinded spike-event-change="app.partial.Menu.change()">' 
 ; html += '            <option>xxx</option>' 
 ; html += '        </select>' 
 ; html += '' 
@@ -33,15 +33,15 @@
 ; html += '' 
       } 
 ; html += '' 
-; html += '    <div class="col-xs-3 transaction-column">'+ $messages.get('m_betSlipBetType_' + transaction.slipType) +' </div>' 
-; html += '    <div class="col-xs-2 transaction-column" spike-translation="m_transaction_'+ transaction.resultText +'">m_transaction_'+ transaction.resultText +'</div>' 
+; html += '    <div class="col-xs-3 transaction-column">'+ $messages.get('xxxxxx' + transaction.xxxxx) +' </div>' 
+; html += '    <div class="col-xs-2 transaction-column" spike-translation="transaction_'+ transaction.dsds +'">transaction_'+ transaction.dsds +'</div>' 
 ; html += '' 
 ; html += '</div>' 
 ; return html 
 ; } 
 ; window["_spike_templates"]["@template/independent"] =  "" + 
  "<div>" + 
- "    <p id=\"someIndependendId\"  spike-event-click=\"app.component.TopMenu.open()\">" + 
+ "    <p id=\"someIndependendId\" spike-unbinded spike-event-click=\"app.component.TopMenu.open()\">" + 
  "        Hello" + 
  "    </p>" + 
  "" + 
@@ -59,18 +59,18 @@
 ; html += '<div id="myModal" class="modal fade" role="dialog">' 
 ; html += '    <div class="modal-dialog">' 
 ; html += '' 
-; html += '        <button  spike-event-click="app.router.location('+"'"+'/post/1'+"'"+')">dsdsds</button>' 
+; html += '        <button spike-unbinded spike-event-click="app.router.location('+"'"+'/post/1'+"'"+')">dsdsds</button>' 
 ; html += '' 
 ; html += '        <div class="modal-content">' 
 ; html += '            <div class="modal-header">' 
-; html += '                <button type="button" class="close"  spike-event-click="app.controller.Home.clickOk();" data-dismiss="modal">&times;</button>' 
-; html += '                <h4 spike-translation="m_tranlsation_title" class="modal-title" >m_tranlsation_title</h4>' 
+; html += '                <button type="button" class="close" spike-unbinded spike-event-click="app.controller.Home.clickOk();" data-dismiss="modal">&times;</button>' 
+; html += '                <h4 spike-translation="tranlsation_title" class="modal-title" >tranlsation_title</h4>' 
 ; html += '            </div>' 
 ; html += '            <div class="modal-body">' 
 ; html += '                <p>Some text in the modal.</p>' 
 ; html += '            </div>' 
 ; html += '            <div class="modal-footer">' 
-; html += '                <button  spike-translation="m_tranlsation_title"  type="button" class="btn btn-default" data-dismiss="modal" > sad dClose</button>' 
+; html += '                <button  spike-translation="tranlsation_title"  type="button" class="btn btn-default" data-dismiss="modal" > sad dClose</button>' 
 ; html += '            </div>' 
 ; html += '        </div>' 
 ; html += '' 
@@ -94,7 +94,7 @@
 ; html += '' 
 ;     }); 
 ; html += '' 
-; html += '    <h2 spike-translation="m_tranlsation_5"' 
+; html += '    <h2 spike-translation="tranlsation_5"' 
 ; html += '    data-id="2">' 
 ; html += '    </h2>' 
 ; html += '' 
