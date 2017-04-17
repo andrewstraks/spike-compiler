@@ -2,10 +2,7 @@ package com.spike.scripts;
 
 import org.apache.commons.lang.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Dawid on 2017-01-29.
@@ -150,12 +147,13 @@ public class ScriptsCompiler {
 
                 String[] importsStr = importHeading.split(",");
 
+
                 for (int o = 0; o < importsStr.length; o++) {
 
                     if (o < importsStr.length - 1) {
 
                         if (importsStr[o + 1].trim().length() > 0 && importsStr[o].contains("$")) {
-                            imports.put(importsStr[o], importsStr[o + 1].trim());
+                            imports.put(importsStr[o].trim(), importsStr[o + 1].trim());
                         }
 
                     }
@@ -164,8 +162,23 @@ public class ScriptsCompiler {
 
                 String compiled = fileContent.replace(importHeadingOriginal, "/**"+importHeadingOriginal.replace("*","")+"**/");
 
+                List<String> listOfSorted = new ArrayList<>();
+
                 for (Map.Entry<String, String> entry : imports.entrySet()) {
-                    compiled = compiled.replace(entry.getKey().trim(), entry.getValue().trim());
+                    listOfSorted.add((String) entry.getKey());
+                }
+
+                String[] arraySortedKeys = (String[]) listOfSorted.toArray(new String[listOfSorted.size()]);
+
+                Arrays.sort(arraySortedKeys, new Comparator<String>() {
+                    @Override
+                    public int compare(String o1, String o2) {
+                        return o1.length() > o2.length() ? 0 : 1;
+                    }
+                });
+
+                for(int l = 0; l < arraySortedKeys.length; l++){
+                    compiled = compiled.replace(arraySortedKeys[l], imports.get(arraySortedKeys[l]));
                 }
 
                 output = output.replace(fileContent, compiled);
