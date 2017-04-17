@@ -166,6 +166,7 @@ class TemplatesCompiler {
                 'hover',
                 'keydown',
                 'mousemove',
+                'mouseover',
                 'mouseenter',
                 'mousedown',
                 'mouseleave',
@@ -215,13 +216,12 @@ class TemplatesCompiler {
 
         }
 
-
         eventsList.each { event ->
 
             if(replaceCiapki){
-                template = template.replace(event, event.replace('[', 'spike-event=\\"' + event.replace('[', '').replace(']', '') + '\\" spike-event-').replace(']', ''))
+                template = template.replace(event, event.replace('[', 'spike-unbinded spike-event-').replace(']', ''))
             }else{
-                template = template.replace(event, event.replace('[', 'spike-event="' + event.replace('[', '').replace(']', '') + '" spike-event-').replace(']', ''))
+                template = template.replace(event, event.replace('[', 'spike-unbinded spike-event-').replace(']', ''))
             }
 
         }

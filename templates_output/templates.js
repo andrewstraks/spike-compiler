@@ -7,9 +7,9 @@
 ; html += '' 
       if($local.person && $local.person.hidden == false) { 
 ; html += '' 
-; html += '    <button spike-event="click" spike-event-click="app.router.location('+"'"+'/post/1'+"'"+')">dsdsds</button>' 
+; html += '    <button  spike-event-click="app.router.location('+"'"+'/post/1'+"'"+')"  spike-event-mouseover="app.partial.Menu.dupa()">dsdsds</button>' 
 ; html += '' 
-; html += '        <p spike-event="click" spike-event-click="app.partial.Menu.click('+"'"+$local.person.id+"'"+')">Name: '+$local.person.name+'</p>' 
+; html += '        <p  spike-event-click="app.partial.Menu.click('+"'"+$local.person.id+"'"+')">Name: '+$local.person.name+'</p>' 
 ; html += '        <p spike-translation="m_tranlsation_1 ">Surname: '+$local.person.surname+'</p>' 
 ; html += '' 
 ; html += '        <p spike-translation="m_tranlsation_1 ">m_tranlsation_1</p>' 
@@ -22,7 +22,7 @@
 ; html += '     <div spike-translation="'+$local.name+'">'+$local.name+'</div>' 
 ; html += '        '+ app.partial.include($menu, $local.person) +'' 
 ; html += '' 
-; html += '        <select spike-event="change" spike-event-change="app.partial.Menu.change()"' 
+; html += '        <select  spike-event-change="app.partial.Menu.change()">' 
 ; html += '            <option>xxx</option>' 
 ; html += '        </select>' 
 ; html += '' 
@@ -41,7 +41,7 @@
 ; } 
 ; window["_spike_templates"]["@template/independent"] =  "" + 
  "<div>" + 
- "    <p id=\"someIndependendId\" spike-event=\"click\" spike-event-click=\"app.component.TopMenu.open()\">" + 
+ "    <p id=\"someIndependendId\"  spike-event-click=\"app.component.TopMenu.open()\">" + 
  "        Hello" + 
  "    </p>" + 
  "" + 
@@ -59,11 +59,11 @@
 ; html += '<div id="myModal" class="modal fade" role="dialog">' 
 ; html += '    <div class="modal-dialog">' 
 ; html += '' 
-; html += '        <button spike-event="click" spike-event-click="app.router.location('+"'"+'/post/1'+"'"+')">dsdsds</button>' 
+; html += '        <button  spike-event-click="app.router.location('+"'"+'/post/1'+"'"+')">dsdsds</button>' 
 ; html += '' 
 ; html += '        <div class="modal-content">' 
 ; html += '            <div class="modal-header">' 
-; html += '                <button type="button" class="close" spike-event="click" spike-event-click="app.controller.Home.clickOk();" data-dismiss="modal">&times;</button>' 
+; html += '                <button type="button" class="close"  spike-event-click="app.controller.Home.clickOk();" data-dismiss="modal">&times;</button>' 
 ; html += '                <h4 spike-translation="m_tranlsation_title" class="modal-title" >m_tranlsation_title</h4>' 
 ; html += '            </div>' 
 ; html += '            <div class="modal-body">' 
