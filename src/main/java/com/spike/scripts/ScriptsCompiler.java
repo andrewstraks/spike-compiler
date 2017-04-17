@@ -162,7 +162,7 @@ public class ScriptsCompiler {
 
                 }
 
-                String compiled = fileContent.replace(importHeadingOriginal, "/**"+importHeadingOriginal+"**/");
+                String compiled = fileContent.replace(importHeadingOriginal, "/**"+importHeadingOriginal.replace("*","")+"**/");
 
                 for (Map.Entry<String, String> entry : imports.entrySet()) {
                     compiled = compiled.replace(entry.getKey().trim(), entry.getValue().trim());
