@@ -28,7 +28,7 @@ public class TemplatesCompiler {
         Boolean isTemplate = templateFile.getName().contains("template.html");
 
         output = "; window['" + templatesGlobalDeclaration + "']['" + getFileName(templateFile) + "'] = function($local) { \n";
-        output += "; var html = ' \n";
+        output += "; var html = '' \n";
 
         BufferedReader in = new BufferedReader(new FileReader(templateFile));
         String str;
@@ -144,11 +144,11 @@ public class TemplatesCompiler {
 
             String line = splitted[i];
 
-            Integer index = line.indexOf("spike='");
+            int index = line.indexOf("spike='");
 
             try {
                 if(index > -1){
-                    Integer index2 = line.replace("spike='","").indexOf("'");
+                    int index2 = line.replace("spike='","").indexOf("'");
 
                     String basicLine = line.substring(index, index2+7);
 
@@ -300,7 +300,6 @@ public class TemplatesCompiler {
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
                 System.out.println( "Error occurred during spike-translation compiling. Probably incorrect syntax of spike-translation or around.");
                 System.out.println( "Suggested fragment of code: " + fragment.replace(";", "").replace("html", "").replace("+=", "").replace("'", "").replace("\n", " "));
             }

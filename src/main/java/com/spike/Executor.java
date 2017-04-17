@@ -61,13 +61,13 @@ public class Executor {
 
         String type = args[0];
 
-        if (type == "test-templates") {
+        if (type.equals("test-templates")) {
             type = "templates";
             args = new String[]{null, "templates_input/", "templates_output/templates.js"};
-        } else if (type == "test-scripts") {
+        } else if (type.equals("test-scripts")) {
             type = "imports-gstrings";
             args = new String[]{null, "scripts_input/test.js", "scripts_output/compiled.js"};
-        } else if (type == "test-cli") {
+        } else if (type.equals("test-cli")) {
             args = new String[]{"cli", "cli/test/component/", "component", "UserPanel"};
             cli(args);
             args = new String[]{"cli", "cli/test/controller/", "controller", "Home"};
@@ -82,7 +82,7 @@ public class Executor {
             cli(args);
         }
 
-        if (type == "imports-gstrings") {
+        if (type.equals("imports-gstrings")) {
 
             String fileBody = scriptsIO.getFile(args[1]);
 
@@ -91,7 +91,7 @@ public class Executor {
 
             scriptsIO.saveFile(fileBody, args[2]);
 
-        } else if (type == "templates") {
+        } else if (type.equals("templates")) {
 
 
             List<File> files = templatesIO.getFileList(args[1]);
@@ -107,7 +107,7 @@ public class Executor {
             templatesIO.saveConcatedFiles(functionBodies, args[2]);
 
 
-        } else if (type == "cli") {
+        } else if (type.equals("cli")) {
 
             cli(args);
 
