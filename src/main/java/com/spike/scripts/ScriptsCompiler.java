@@ -173,11 +173,12 @@ public class ScriptsCompiler {
                 Arrays.sort(arraySortedKeys, new Comparator<String>() {
                     @Override
                     public int compare(String o1, String o2) {
-                        return o1.length() > o2.length() ? 0 : 1;
+                        return o1.length() > o2.length() ? -1 : 1;
                     }
                 });
 
                 for(int l = 0; l < arraySortedKeys.length; l++){
+
                     compiled = compiled.replace(arraySortedKeys[l], imports.get(arraySortedKeys[l]));
                 }
 
