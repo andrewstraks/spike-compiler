@@ -2,12 +2,6 @@
     "name": "spike-compiler",
     "version": "2.0.0.",
     "main": "build/libs/spike-compiler.jar",
-    "ignore": [
-        "scripts_input",
-		"scripts_output",
-		"templates_input",
-		"templates_output",
-		"cli"
-    ],
+    "ignore": [],
     "dependencies": {}
 }
