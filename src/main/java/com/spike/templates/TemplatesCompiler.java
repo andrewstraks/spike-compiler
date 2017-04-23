@@ -58,6 +58,7 @@ public class TemplatesCompiler {
             for(String line : lines){
 
                 if (line.contains("<!--")) {
+                    output += "/** " + line.replace("<!--","").replace("-->","") + " **/ ";
                 }else  if (line.startsWith("'import")) {
                     String key = line.replace("'", "").substring(0, line.indexOf("as") - 1).replace("import", "").trim();
                     String value = line.substring(line.indexOf("as") + 2, line.length()).replace("'", "").replace(";", "").trim();
@@ -92,6 +93,7 @@ public class TemplatesCompiler {
             for(String line : lines){
 
                 if (line.contains("<!--")) {
+                    output += "/** " + line.replace("<!--","").replace("-->","") + " **/ ";
                 } else if (line.startsWith("'import")) {
 
                     String key = line.replace("'", "").substring(0, line.indexOf("as") - 1).replace("import", "").trim();
