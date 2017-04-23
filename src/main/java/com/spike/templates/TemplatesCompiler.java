@@ -34,37 +34,34 @@ public class TemplatesCompiler {
         String str;
 
         List<String> lines = new ArrayList<String>();
-            while((str = in.readLine()) != null){
-                lines.add(str);
-            }
+        while ((str = in.readLine()) != null) {
+            lines.add(str);
+        }
 
         if (lines.size() == 0) {
             String wholeFileContent = IOUtils.toString(new FileInputStream(templateFile), "utf-8");
-
             output += " ' " + wholeFileContent + " ' ";
-            System.out.println( "Warning: Template file is almost empty " + templateFile.getName());
-
+            System.out.println("Warning: Template file is almost empty " + templateFile.getName());
         } else if (isTemplate) {
 
             String templateName = this.getFileName(templateFile);
-            templateName = templateName.substring(templateName.lastIndexOf("/")+1, templateName.length());
+            templateName = templateName.substring(templateName.lastIndexOf("/") + 1, templateName.length());
             templateName = templateName.substring(0, templateName.indexOf("."));
 
-
-            output = "; window['" + templatesGlobalDeclaration + "']['" + "@template/"+templateName + "'] = ";
+            output = "; window['" + templatesGlobalDeclaration + "']['" + "@template/" + templateName + "'] = ";
 
             Map<String, String> importsReplacements = new HashMap<>();
 
-            for(String line : lines){
+            for (String line : lines) {
 
                 if (line.contains("<!--")) {
-                    output += "/** " + line.replace("<!--","").replace("-->","") + " **/ ";
-                }else  if (line.startsWith("'import")) {
+                    output += "/** " + line.replace("<!--", "").replace("-->", "") + " **/ ";
+                } else if (line.startsWith("'import")) {
                     String key = line.replace("'", "").substring(0, line.indexOf("as") - 1).replace("import", "").trim();
                     String value = line.substring(line.indexOf("as") + 2, line.length()).replace("'", "").replace(";", "").trim();
                     importsReplacements.put(key, value);
                 } else {
-                    line =  replaceSpikeTranslations(line);
+                    line = replaceSpikeTranslations(line);
                     output += " '" + escapeEvents(line.replace("'", "\\'")) + "' + \n";
                 }
 
@@ -90,10 +87,10 @@ public class TemplatesCompiler {
 
             Map<String, String> importsReplacements = new HashMap<>();
 
-            for(String line : lines){
+            for (String line : lines) {
 
                 if (line.contains("<!--")) {
-                    output += "/** " + line.replace("<!--","").replace("-->","") + " **/ ";
+                    output += "/** " + line.replace("<!--", "").replace("-->", "") + " **/ ";
                 } else if (line.startsWith("'import")) {
 
                     String key = line.replace("'", "").substring(0, line.indexOf("as") - 1).replace("import", "").trim();
@@ -101,15 +98,12 @@ public class TemplatesCompiler {
                     importsReplacements.put(key, value);
 
                 } else if (line.trim().startsWith("#")) {
-
                     output += (line.endsWith(",") || line.endsWith("{") || line.endsWith("}") ? " " : "; ") + line.replace("#", "") + " \n";
                 } else {
 
-                    line =  replaceSpikeTranslations(line);
+                    line = replaceSpikeTranslations(line);
                     if (isPartial) {
-
                         // line = createPartialSpecialAttributes(line)
-
                         output += "; html += '" + replaceSpecialCharacters(line) + "' \n";
                     } else {
                         output += "; html += '" + escapeEvents(line) + "' \n";
@@ -127,7 +121,7 @@ public class TemplatesCompiler {
                 String key = entry.getKey();
                 String val = entry.getValue();
 
-                    output = output.replace(key.trim(), val.trim());
+                output = output.replace(key.trim(), val.trim());
             }
 
             output = createPartialEvents(output, false);
@@ -138,28 +132,28 @@ public class TemplatesCompiler {
 
     }
 
-    static String createPartialSpecialAttributes(String str){
+    static String createPartialSpecialAttributes(String str) {
 
         String[] splitted = str.split("\n");
 
-        for(int i = 0; i < splitted.length; i++){
+        for (int i = 0; i < splitted.length; i++) {
 
             String line = splitted[i];
 
             int index = line.indexOf("spike='");
 
             try {
-                if(index > -1){
-                    int index2 = line.replace("spike='","").indexOf("'");
+                if (index > -1) {
+                    int index2 = line.replace("spike='", "").indexOf("'");
 
-                    String basicLine = line.substring(index, index2+7);
+                    String basicLine = line.substring(index, index2 + 7);
 
-                    String line2 = basicLine.substring(0,basicLine.length()).replace("spike='","");
-                    line2 = "\"+ ("+line2 +") +\"";
+                    String line2 = basicLine.substring(0, basicLine.length()).replace("spike='", "");
+                    line2 = "\"+ (" + line2 + ") +\"";
 
                     splitted[i] = line.replace(basicLine, line2);
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -219,7 +213,7 @@ public class TemplatesCompiler {
         List<String> eventsList = new ArrayList<>();
 
         String fragment = null;
-        for(Integer eindex : eventsIndexes){
+        for (Integer eindex : eventsIndexes) {
 
             fragment = template.substring(eindex, template.length());
 
@@ -232,15 +226,13 @@ public class TemplatesCompiler {
 
             }
 
-            fragment = null;
-
         }
 
-        for(String event : eventsList){
+        for (String event : eventsList) {
 
-            if(replaceCiapki){
+            if (replaceCiapki) {
                 template = template.replace(event, event.replace("[", "spike-unbinded spike-event-").replace("]", ""));
-            }else{
+            } else {
                 template = template.replace(event, event.replace("[", "spike-unbinded spike-event-").replace("]", ""));
             }
 
@@ -249,7 +241,6 @@ public class TemplatesCompiler {
         return template;
 
     }
-
 
     static String replaceSpikeTranslations(String template) {
 
@@ -273,27 +264,25 @@ public class TemplatesCompiler {
 
         String fragment = null;
 
-                for(Integer tindex : translationIndexes){
+        for (Integer tindex : translationIndexes) {
 
             fragment = template.substring(tindex, template.length());
 
             try {
 
-                if(fragment.contains("<") && fragment.contains(">")){
+                if (fragment.contains("<") && fragment.contains(">")) {
 
                     fragment = fragment.substring(0, fragment.indexOf("<") + 1);
 
-                    String inElement = fragment.substring(fragment.indexOf(">"), fragment.indexOf("<")+1).trim();
+                    String inElement = fragment.substring(fragment.indexOf(">"), fragment.indexOf("<") + 1).trim();
 
-                    if(inElement.length() == 2){
+                    if (inElement.length() == 2) {
 
-                        String translationContent = fragment.substring(fragment.indexOf("'")+1, fragment.length());
-                        translationContent = translationContent.substring(0, translationContent.indexOf("'")).trim();
+                        String translationContent = fragment.substring(fragment.indexOf("'") + 1, fragment.length());
 
-                                String replacement = fragment.replace("><", ">"+translationContent+"<");
-
+                        translationContent = translationContent.substring(translationContent.indexOf("\"") + 1, translationContent.lastIndexOf("\"")).trim();
+                        String replacement = fragment.replace("><", ">" + translationContent + "<");
                         template = template.replace(fragment, replacement);
-
 
                     }
 
@@ -302,30 +291,28 @@ public class TemplatesCompiler {
                 }
 
             } catch (Exception e) {
-                System.out.println( "Error occurred during spike-translation compiling. Probably incorrect syntax of spike-translation or around.");
-                System.out.println( "Suggested fragment of code: " + fragment.replace(";", "").replace("html", "").replace("+=", "").replace("'", "").replace("\n", " "));
             }
 
 
         }
 
 
-
         return template;
 
     }
 
-    static String escapeEvents(String line){
+    static String escapeEvents(String line) {
 
-        try {
 
-            line = line.replace("[[[", "'+\"'\"+");
-            line = line.replace("]]]", "+\"'\"+'");
+            try {
 
-        } catch (Exception e) {
-            System.out.println( "Error occurred during template compiling. Probably incorrect syntax with: [[ ]] or [[[ ]]] or @include");
-            System.out.println( "Suggested fragment of code: " + line);
-        }
+                line = line.replace("[[[", "'+\"'\"+");
+                line = line.replace("]]]", "+\"'\"+'");
+
+            } catch (Exception e) {
+                System.out.println("Error occurred during template compiling. Probably incorrect syntax with: [[ ]] or [[[ ]]] or @include");
+                System.out.println("Suggested fragment of code: " + line);
+            }
 
 
         return line;
@@ -335,24 +322,22 @@ public class TemplatesCompiler {
 
     static String replaceSpecialCharacters(String line) {
 
-        try {
+            try {
 
-            line = line.replace("@include", "app.partial.include");
-            line = line.replace("[[[", "'+\"'\"+");
-            line = line.replace("]]]", "+\"'\"+'");
-            line = line.replace("[[", "'+");
-            line = line.replace("]]", "+'");
+                line = line.replace("@include", "app.partial.include");
+                line = line.replace("[[[", "'+\"'\"+");
+                line = line.replace("]]]", "+\"'\"+'");
+                line = line.replace("[[", "'+");
+                line = line.replace("]]", "+'");
 
-        } catch (Exception e) {
-            System.out.println( "Error occurred during template compiling. Probably incorrect syntax with: [[ ]] or [[[ ]]] or @include");
-            System.out.println( "Suggested fragment of code: " + line);
-        }
-
+            } catch (Exception e) {
+                System.out.println("Error occurred during template compiling. Probably incorrect syntax with: [[ ]] or [[[ ]]] or @include");
+                System.out.println("Suggested fragment of code: " + line);
+            }
 
 
         return line;
 
     }
-
 
 }

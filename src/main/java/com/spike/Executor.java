@@ -9,6 +9,7 @@ import com.spike.templates.TemplatesIO;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -93,11 +94,8 @@ public class Executor {
 
         } else if (type.equals("templates")) {
 
-
             List<File> files = templatesIO.getFileList(args[1]);
-
             List<String> functionBodies = new ArrayList<>();
-
             functionBodies.add(templatesCompiler.getTemplatesDeclaration());
 
             for (File file : files) {
@@ -105,7 +103,6 @@ public class Executor {
             }
 
             templatesIO.saveConcatedFiles(functionBodies, args[2]);
-
 
         } else if (type.equals("cli")) {
 
