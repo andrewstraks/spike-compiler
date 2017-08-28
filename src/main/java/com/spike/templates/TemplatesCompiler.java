@@ -21,7 +21,7 @@ public class TemplatesCompiler {
         return templateFile.getPath().replaceAll("\\\\", "/");
     }
 
-    public String compile(File templateFile) throws IOException {
+    public String compile(String rootDir, File templateFile) throws IOException {
 
         String output = null;
         Boolean isPartial = templateFile.getName().contains("partial.html");
@@ -45,6 +45,9 @@ public class TemplatesCompiler {
         } else if (isTemplate) {
 
             String templateName = this.getFileName(templateFile);
+
+          //  cacheTemplate(templateName, templateFile);
+
             templateName = templateName.substring(templateName.lastIndexOf("/") + 1, templateName.length());
             templateName = templateName.substring(0, templateName.indexOf("."));
 
@@ -87,6 +90,22 @@ public class TemplatesCompiler {
 
             Map<String, String> importsReplacements = new HashMap<>();
 
+//            for (String line : lines) {
+//
+//                if (line.contains("@template")) {
+//
+//                    String[] templateNames = StringUtils.substringsBetween(line, "@template(", ")");
+//
+//                    for (int i = 0; i < templateNames.length; i++) {
+//
+//                        line = line.replace("@template(" + templateNames[i] + ")", getTemplate(templateNames[i], rootDir));
+//
+//                    }
+//
+//                }
+//
+//            }
+
             for (String line : lines) {
 
                 if (line.contains("<!--")) {
@@ -100,6 +119,18 @@ public class TemplatesCompiler {
                 } else if (line.trim().startsWith("#")) {
                     output += (line.endsWith(",") || line.endsWith("{") || line.endsWith("}") ? " " : "; ") + line.replace("#", "") + " \n";
                 } else {
+
+//                    if (line.contains("@template")) {
+//
+//                        String[] templateNames = StringUtils.substringsBetween(line, "@template(", ")");
+//
+//                        for (int i = 0; i < templateNames.length; i++) {
+//
+//                            line = line.replace("@template(" + templateNames[i] + ")", getTemplate(templateNames[i], rootDir));
+//
+//                        }
+//
+//                    }
 
                     line = replaceSpikeTranslations(line);
                     if (isPartial) {
@@ -129,6 +160,40 @@ public class TemplatesCompiler {
         }
 
         return output;
+
+    }
+
+    static HashMap<String, String> templates = new HashMap<>();
+
+    static void cacheTemplate(String templateName, File templateFile) throws IOException {
+
+        templates.put(templateName, IOUtils.toString(new FileInputStream(templateFile), "utf-8"));
+
+        System.out.println("templateFile: "+templateFile);
+
+        try {
+            templates.put(templateName, IOUtils.toString(new FileInputStream(templateFile), "utf-8"));
+        }catch (Exception e){
+            e.printStackTrace();
+            System.out.println("Template "+templateName+" cannot be found");
+            templates.put(templateName, "");
+        }
+
+    }
+
+
+    static String getTemplate(String name, String rootDir) throws IOException {
+
+        System.out.println("getTemplate: "+name);
+
+        if(templates.get(name) == null){
+            cacheTemplate(name, TemplatesIO.findFileByName(new File(rootDir), name+".template.html"));
+        }
+
+        System.out.println("getTemplate: "+templates.get(name));
+
+        return templates.get(name);
+
 
     }
 
@@ -304,15 +369,15 @@ public class TemplatesCompiler {
     static String escapeEvents(String line) {
 
 
-            try {
+        try {
 
-                line = line.replace("[[[", "'+\"'\"+");
-                line = line.replace("]]]", "+\"'\"+'");
+            line = line.replace("[[[", "'+\"'\"+");
+            line = line.replace("]]]", "+\"'\"+'");
 
-            } catch (Exception e) {
-                System.out.println("Error occurred during template compiling. Probably incorrect syntax with: [[ ]] or [[[ ]]] or @include");
-                System.out.println("Suggested fragment of code: " + line);
-            }
+        } catch (Exception e) {
+            System.out.println("Error occurred during template compiling. Probably incorrect syntax with: [[ ]] or [[[ ]]] or @include");
+            System.out.println("Suggested fragment of code: " + line);
+        }
 
 
         return line;
@@ -322,18 +387,18 @@ public class TemplatesCompiler {
 
     static String replaceSpecialCharacters(String line) {
 
-            try {
+        try {
 
-                line = line.replace("@include", "app.partial.include");
-                line = line.replace("[[[", "'+\"'\"+");
-                line = line.replace("]]]", "+\"'\"+'");
-                line = line.replace("[[", "'+");
-                line = line.replace("]]", "+'");
+            line = line.replace("@include", "app.partial.include");
+            line = line.replace("[[[", "'+\"'\"+");
+            line = line.replace("]]]", "+\"'\"+'");
+            line = line.replace("[[", "'+");
+            line = line.replace("]]", "+'");
 
-            } catch (Exception e) {
-                System.out.println("Error occurred during template compiling. Probably incorrect syntax with: [[ ]] or [[[ ]]] or @include");
-                System.out.println("Suggested fragment of code: " + line);
-            }
+        } catch (Exception e) {
+            System.out.println("Error occurred during template compiling. Probably incorrect syntax with: [[ ]] or [[[ ]]] or @include");
+            System.out.println("Suggested fragment of code: " + line);
+        }
 
 
         return line;

@@ -99,7 +99,7 @@ public class Executor {
             functionBodies.add(templatesCompiler.getTemplatesDeclaration());
 
             for (File file : files) {
-                functionBodies.add(templatesCompiler.compile(file));
+                functionBodies.add(templatesCompiler.compile(args[1], file));
             }
 
             templatesIO.saveConcatedFiles(functionBodies, args[2]);

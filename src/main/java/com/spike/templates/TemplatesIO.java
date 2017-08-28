@@ -27,6 +27,22 @@ public class TemplatesIO {
 
     }
 
+    public static File findFileByName(File dir, String nameWithExtension) {
+        Set<File> fileTree = listFileTree(dir);
+
+        for (File file : fileTree) {
+            System.out.println(file.getName());
+            System.out.println(nameWithExtension);
+
+            if(file.getName().equals(nameWithExtension)){
+                return file;
+            }
+
+        }
+
+        return null;
+    }
+
     public static Set<File> listFileTree(File dir) {
         Set<File> fileTree = new HashSet<>();
 
