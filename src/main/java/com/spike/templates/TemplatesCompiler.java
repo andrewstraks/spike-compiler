@@ -373,6 +373,8 @@ public class TemplatesCompiler {
 
             line = line.replace("[[[", "'+\"'\"+");
             line = line.replace("]]]", "+\"'\"+'");
+            line = line.replace("[[", "'+");
+            line = line.replace("]]", "+'");
 
         } catch (Exception e) {
             System.out.println("Error occurred during template compiling. Probably incorrect syntax with: [[ ]] or [[[ ]]] or @include");
