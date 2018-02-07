@@ -51,7 +51,7 @@ public class TemplatesCompiler {
             templateName = templateName.substring(templateName.lastIndexOf("/") + 1, templateName.length());
             templateName = templateName.substring(0, templateName.indexOf("."));
 
-            output = "; window['" + templatesGlobalDeclaration + "']['" + "@template/" + templateName + "'] = ";
+            output = "; window['" + templatesGlobalDeclaration + "']['" + "@template/" + templateName + "'] = function(){return";
 
             Map<String, String> importsReplacements = new HashMap<>();
 
@@ -64,7 +64,7 @@ public class TemplatesCompiler {
                     String value = line.substring(line.indexOf("as") + 2, line.length()).replace("'", "").replace(";", "").trim();
                     importsReplacements.put(key, value);
                 } else {
-                    line = replaceSpikeTranslations(line);
+                    line = replaceSpikeTranslations(line, "TEMPLATE");
                     output += " '" + escapeEvents(line.replace("'", "\\'")) + "' + \n";
                 }
 
@@ -72,7 +72,7 @@ public class TemplatesCompiler {
 
             output = output.substring(0, output.lastIndexOf("+"));
 
-            output += "; \n";
+            output += "}; \n";
 
             for (Map.Entry<String, String> entry : importsReplacements.entrySet()) {
 
@@ -132,7 +132,7 @@ public class TemplatesCompiler {
 //
 //                    }
 
-                    line = replaceSpikeTranslations(line);
+                    line = replaceSpikeTranslations(line, isPartial ? "PARTIAL" : "VIEW");
                     if (isPartial) {
                         // line = createPartialSpecialAttributes(line)
                         output += "; html += '" + replaceSpecialCharacters(line) + "' \n";
@@ -158,6 +158,8 @@ public class TemplatesCompiler {
             output = createPartialEvents(output, false);
 
         }
+
+        output = output.replace("ESCAPED_QUOTE", "'");
 
         return output;
 
@@ -307,7 +309,7 @@ public class TemplatesCompiler {
 
     }
 
-    static String replaceSpikeTranslations(String template) {
+    static String replaceSpikeTranslations(String template, String type) {
 
         String translationWord = "spike-translation";
         Set<Integer> translationIndexes = new HashSet<>();
@@ -346,8 +348,18 @@ public class TemplatesCompiler {
                         String translationContent = fragment.substring(fragment.indexOf("'") + 1, fragment.length());
 
                         translationContent = translationContent.substring(translationContent.indexOf("\"") + 1, translationContent.lastIndexOf("\"")).trim();
-                        String replacement = fragment.replace("><", ">" + translationContent + "<");
-                        template = template.replace(fragment, replacement);
+
+                        if(type.equals("VIEW")){
+                            String replacement = fragment.replace("><", ">'+app.message.get('" + translationContent + "')+'<");
+                            template = template.replace(fragment, replacement);
+                        }else if(type.equals("PARTIAL")){
+                            String replacement = fragment.replace("><", ">'+app.message.get('" + translationContent + "')+'<");
+                            template = template.replace(fragment, replacement);
+                        }else if(type.equals("TEMPLATE")){
+                            String replacement = fragment.replace("><", ">ESCAPED_QUOTE+app.message.get(\"" + translationContent + "\")+ESCAPED_QUOTE<");
+                            template = template.replace(fragment, replacement);
+                        }
+
 
                     }
 
@@ -362,7 +374,7 @@ public class TemplatesCompiler {
         }
 
 
-        return template;
+        return template.replace("\'","'");
 
     }
 
